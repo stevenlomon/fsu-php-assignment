@@ -66,3 +66,17 @@ Jag tar tillbaka detta, jag vill bara att arkitekturen ska vara så simpel som b
 Så där har vi nu istället då!  
 
 Vår `db.php` som innehåller vår databaskoppling ligger i `/html/` istället för root för att... pga hur vår Docker container är uppsatt om jag förstår rätt. Men den representerar inte en sida alls.  
+
+Nu när jag håller på att be Gemini översätta min ERD till SQL pekar den ut en väldigt valid point:  
+> reply_to Reference: In the diagram, reply_to links to User(UniqueID). If you meant for replies to reference the parent post instead (for threaded comment trees), change that foreign key to FOREIGN KEY (reply_to) REFERENCES posts(id) ON DELETE SET NULL.  
+
+Det är smidigare att `reply_to` är en self-referential FK till en `Post` eller `NULL` för vi kan hitta `User` via `Post`!  
+Så vår nya ERD..  
+![ERD v1.2](./docs/Screenshot_2026-08-30_14-45-07.png)  
+There we go.  
+
+Och detta finns nu översatt till SQL i denna [schema.sql fil](./db/schema.sql). Dags att köra det i phpMyAdmin.  
+![SQL ser inte ut att returnera errors](./screenshots/Screenshot_2026-08-30_14-54-06.png)  
+Ser lovande ut! Och...  
+![Våra 5 tabeller skapade i phpMyAdmin](./screenshots/Screenshot_2026-08-30_14-55-19.png)  
+Snyggt 🥳  
