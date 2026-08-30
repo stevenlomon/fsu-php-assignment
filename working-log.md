@@ -64,3 +64,5 @@ Jag tar tillbaka detta, jag vill bara att arkitekturen ska vara så simpel som b
 
 ![Vår nya file based router](./screenshots/Screenshot_2026-08-30_14-29-03.png)  
 Så där har vi nu istället då!  
+
+Vår `db.php` som innehåller vår databaskoppling ligger i `/html/` istället för root för att... pga hur vår Docker container är uppsatt om jag förstår rätt. Men den representerar inte en sida alls.  
