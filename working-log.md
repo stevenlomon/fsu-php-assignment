@@ -20,4 +20,47 @@ stevenlomon@steven-pop-os:~/fullstack/fsu-php-assignment$
 ```
 Så nu på root @8082 borde vi se...  
 ![PHP 8.4.25 running cleanly](./screenshots/Screenshot_2026-08-30_13-15-56.png)  
-Wonderful 🥳
+Wonderful 🥳  
+
+Låt oss nu översätta [vår sitemap från vår pre-work](pre-work.md#sitemap)  
+```
+/  
+/register  
+/profile  
+/groups  
+/groups/:id  
+/groups/:id/discussions  
+/groups/:id/discussions/:id  
+``` 
+till en file based router. Precis som Next.js!! Apparently så moderniserade Next.js det som PHP etablerade, riktigt cool dot to connect!  
+
+Och jag märker här haha...  
+Min första instinkt var att sätta upp det som vi skulle i Next.js!  
+![Första instinkt till file based router, likt Next.js](./screenshots/Screenshot_2026-08-30_14-03-35.png)  
+Men efter att ha bollat lite med AI finns det två stora downsides med detta:  
+1. I php kan vi inte använda path aliases som `(@/lib/db)` lika lätt som vi kan i Next.js  
+2. I Gemini's ord:  
+> Flat files (groups.php, group.php, topic.php, register.php, login.php) align with how Apache natively routes requests and keep your require statements simple.  
+
+Så vi the Flat Script Files (`/groups.php`, `/topics.php`) approach istället för the Nested Directory (`/groups/index.php`, `/topics/index.php`) approach! Vilket betyder att vår sitemap helt enkelt översätts till
+```
+html/
+├── db.php
+├── index.php
+├── register.php
+├── login.php
+├── profile.php
+├── groups.php
+└── group.php
+```
+detta!  
+Det som jag från Next.js tänker `/html/groups/[id]/index.php` blir helt enkelt `/group.php?id=id`!  
+
+Oxå; i och med att detta inte är Next.js och vi inte kan tänka komponent vis och hålla state lätt..  
+> Tänker något sånt här med login i Navbar samt ett knapp för att bli medlem haha:  
+> ![Navbar med login och "Bli medlem" knapp](./screenshots/Screenshot_2026-08-30_12-57-31.png)  
+
+Jag tar tillbaka detta, jag vill bara att arkitekturen ska vara så simpel som bara möjlig med så lite head ache som bara möjligt haha.  
+
+![Vår nya file based router](./screenshots/Screenshot_2026-08-30_14-29-03.png)  
+Så där har vi nu istället då!  

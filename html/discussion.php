@@ -1,0 +1,28 @@
+<?php
+  $title = "The Retro Vibe";
+
+  // Skaffa discussion ID på samma sätt som vi gör i group.php
+  $discussionId = (int)($_GET['id'] ?? 0);
+
+  if ($discussionId <= 0) {
+    header('Location: /discussions.php');
+    exit;
+  }
+
+  $subheader = "Diskussions sida med id #" . $discussionId;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= $title ?></title>
+  <h1><?= $title ?></h1>
+  <h2><?= $subheader ?></h2>
+  <p>PHP <?= phpversion()?> running cleanly</p>
+</head>
+<body>
+  
+</body>
+</html>
