@@ -116,3 +116,18 @@ Jag märker nu oxå, och ställde frågan. Jag förstår det som att register.ph
 > - **Plain PHP:** `register.php` handles both serving the UI and processing the mutation in one cohesive script.  
 
 Interesting!
+
+Lite ändringar här i och med `if ($_SERVER['REQUEST_METHOD'] === 'POST')` satsen och databaskopplingen:  
+* Skippar email i register form. Det sätts på profile.php istället. Användare kommer logga in enbart med username och password
+* fname och lname är nu båda nullable i databasen så att de sätts till `NULL` i vår POST request, inte ''. `NULL` är mer true  
+
+Let's try it!  
+`Fatal error: Uncaught mysqli_sql_exception: Column 'email' cannot be null in /var/www/html/register.php:17 Stack trace: #0 /var/www/html/register.php(17): mysqli->query('INSERT INTO use...') #1 {main} thrown in /var/www/html/register.php on line 17`
+Whoops.  
+* email är oxå nullable nu haha!
+
+![Success!](./screenshots/Screenshot_2026-09-01_19-53-53.png)  
+Succesfully redirected till login.php!  
+
+![Data i databasen!](./screenshots/Screenshot_2026-09-01_19-58-54.png)  
+Och vi har data i databasen!! Men inte username? Det här blir att utreda imorn, I'm gonna call it a day here! Viktiga reps idag  
