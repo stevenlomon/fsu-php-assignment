@@ -10,6 +10,10 @@
   <title><?= $title ?></title>
   <h1><?= $title ?></h1>
   <p>PHP <?= phpversion()?> running cleanly</p>
+  <a href="groups.php">Alla grupper</a>
+  <a href="profile.php">Profil</a>
+  <a href="register.php">Registrera</a>
+  <a href="login.php">Logga in</a>
 </head>
 <body>
   

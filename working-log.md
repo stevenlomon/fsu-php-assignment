@@ -80,3 +80,11 @@ Och detta finns nu översatt till SQL i denna [schema.sql fil](./db/schema.sql).
 Ser lovande ut! Och...  
 ![Våra 5 tabeller skapade i phpMyAdmin](./screenshots/Screenshot_2026-08-30_14-55-19.png)  
 Snyggt 🥳  
+
+## Sep 1
+Kodade inte på detta alls igår, oh well! Ska få till lite nu iaf.  
+Jag är på the Home page. Från den ska vi länka till:  
+* groups.php  
+* register.php
+* login.php
+* profile.php
