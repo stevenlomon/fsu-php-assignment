@@ -90,4 +90,29 @@ Jag är på the Home page. Från den ska vi länka till:
 * profile.php
 
 Let's tackle register!  
-Det känns som att jag har tappat lite vanilla HTML från att ha suttit så mycket med React och Next.js haha. `<form action="">` Vilket `action` vill vi ha här? Det här.. ska ju kommunicera med vår databas. Jag tror jag kommer skippa all validering och nu bara fråga AI hur jag fångar form data och får in det i min databas. 
+Det känns som att jag har tappat lite vanilla HTML från att ha suttit så mycket med React och Next.js haha. `<form action="">` Vilket `action` vill vi ha här? Det här.. ska ju kommunicera med vår databas. Jag tror jag kommer skippa all validering och nu bara fråga AI hur jag fångar form data och får in det i min databas.  
+"Can you give a few hints to kickstart my intuition?" Tänker skriva till Gemini så här nu i början så mycket jag kan så att jag lär mig så php så djupt som möjligt. Men från first principles! Och det är aldrig time wasted för jag kommer kunna connect dots och compare and contrast när jag går tillbaka till TS och Next.js!  
+
+> To make the mental shift from React/Next.js, remember that HTML forms work natively without useState, onChange, or fetch(). The browser itself packages the input fields and sends them directly to PHP.
+
+> **The 3 HTML Fixes (Unlearning Reactisms)**
+> 
+> Your form needs three essential adjustments before PHP can read any data:
+> 
+> - **The `name` Attribute:** In vanilla HTML/PHP, `id` is only for CSS/JS. PHP populates `$_POST` strictly based on the **`name`** attribute: `<input name="username">` $\to$ `$_POST['username']`.
+>     
+> - **The Method & Submit Button:** Specify `method="POST"` on the form and add a `<button type="submit">`.
+>     
+> - **HTML Structure:** In HTML, `for` is used instead of JSX's `htmlFor`, and all visible elements must sit inside `<body>`, not `<head>`.
+
+Off to a flying start haha!  
+
+Jag märker nu oxå, och ställde frågan. Jag förstår det som att register.php skickar en POST request.. till sig själv?? It kinda does!
+
+> **Next.js vs. Plain PHP Comparison**
+> 
+> - **Next.js:** You typically create a UI component in `page.tsx` and post data to a separate `route.ts` API endpoint or invoke a Server Action.
+>     
+> - **Plain PHP:** `register.php` handles both serving the UI and processing the mutation in one cohesive script.  
+
+Interesting!

@@ -1,4 +1,5 @@
 <?php
+  // Denna fil kommer vara en så kallad self-submitting form; den skickar en POST request till sig själv!
   $title = "The Retro Vibe";
   $subheader = "Registrera dig för att diskutera allt från SNES till PS2 idag!";
 ?>
@@ -12,22 +13,22 @@
   <p>PHP <?= phpversion()?> running cleanly</p>
   <h1><?= $title ?></h1>
   <h2><?= $subheader ?></h2>
-
-  <form action="">
-    <label htmlfor="username">Användarnamn</label>
-    <input id="username" type="text" />
-
-    <label htmlfor="email">Email</label>
-    <input id="email" type="text" />
-
-    <label htmlfor="password">Lösenord</label>
-    <input id="password" type="password" />
-
-    <label htmlfor="password-repeat">Upprepa Lösenord</label>
-    <input id="password-repeat" type="password" />
-  </form>
 </head>
 <body>
-  
+  <form method="POST" action="register.php">
+    <label for="username">Användarnamn</label>
+    <input id="username" name="username" type="text" />
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="text" />
+
+    <label for="password">Lösenord</label>
+    <input id="password" name="password" type="password" />
+
+    <label for="password-repeat">Upprepa Lösenord</label>
+    <input id="password-repeat" name="password-repeat" type="password" />
+
+    <button type="submit">Skapa konto</button>
+  </form>
 </body>
 </html>
