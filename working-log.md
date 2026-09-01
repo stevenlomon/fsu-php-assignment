@@ -88,3 +88,6 @@ Jag är på the Home page. Från den ska vi länka till:
 * register.php
 * login.php
 * profile.php
+
+Let's tackle register!  
+Det känns som att jag har tappat lite vanilla HTML från att ha suttit så mycket med React och Next.js haha. `<form action="">` Vilket `action` vill vi ha här? Det här.. ska ju kommunicera med vår databas. Jag tror jag kommer skippa all validering och nu bara fråga AI hur jag fångar form data och får in det i min databas. 

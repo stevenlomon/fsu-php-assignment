@@ -7,9 +7,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <p>PHP <?= phpversion()?> running cleanly</p>
   <title><?= $title ?></title>
   <h1><?= $title ?></h1>
-  <p>PHP <?= phpversion()?> running cleanly</p>
   <a href="groups.php">Alla grupper</a>
   <a href="profile.php">Profil</a>
   <a href="register.php">Registrera</a>
