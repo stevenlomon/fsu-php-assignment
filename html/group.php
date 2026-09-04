@@ -25,7 +25,7 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= e($title) ?></h1>
+    <a href="index.php"><h1><?= e($title) ?></h1></a>
     <h2><?= e($subheader) ?></h2>
   </header>
   
