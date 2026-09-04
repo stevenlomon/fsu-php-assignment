@@ -5,6 +5,15 @@
   $title = "The Retro Vibe";
   $subheader = "Logga in för att diskutera allt från SNES till PS2 idag!";
 
+  // Startar sessionen så vi kan bevara data (i detta fall felmeddelanden) över redirects (Post-Redirect-Get mönstret).
+  // PRG sköter omdirigeringen till säkra, idempotenta GET-requests så att refresh inte återupprepar POST-anropet; om
+  // en användare refresh:ar sidan 50 gånger ska inte 50 POST request skickas. 
+  // session_start() behövs för att använda $_SESSION där vi lagrar $errorMessage.
+  session_start(); 
+
+  $errorMessage = $_SESSION['error_message'] ?? null;
+  unset($_SESSION['error_message']); // `unset()` klagar eller kraschar inte om nyckeln inte finns! Så vi behöver inte wrappa dessa två rader i en `if (isset(...)) {`
+
   if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -29,7 +38,7 @@
 
     // Nu när vi har vår user verifierar vi lösenordet mot det hashade lösenordet i databasen
     if ($user && password_verify($password, $user['hashed_password'])) {
-      // TODO: Sätt user ID som session ID!
+      // TODO: Lagra user ID i $_SESSION (finns tydligen även något som heter `session_regenerate_id()` här för security)
 
       header('Location: /index.php');
       exit;
@@ -37,7 +46,9 @@
       // To make up för att jag ignorerade säkerhet helt i min tidigare inlämningsuppgift kommer jag
       // prioritera säkerhet och göra det till en non-negotiable här haha. Oxå för att fördjupa mina
       // security best practices across programming languages för att compare and contrast
-      $errorMessage = "Felaktigt användarnam eller lösenord"; // TODO: Integrerar denna ordentligt för felhantering
+      $_SESSION['error_message'] = "Felaktigt användarnam eller lösenord";
+      header('Location: /login.php');
+      exit;
     }
   }
 ?>
@@ -55,6 +66,13 @@
     <h1><?= e($title) ?></h1>
     <h2><?= e($subheader) ?></h2>
   </header>
+
+  <!-- php's speciella syntax för control structures som `if() {`! För att förhindra måsvinge spaghetti, 
+  lärde mig detta vid mina fundamentals drills. Vi sätter detta if statement med potentiell felmeddelande
+  till användaren ovanför formuläret -->
+  <?php if($errorMessage): ?>
+    <p style="color: red;"><?= e($errorMessage) ?></p>
+  <?php endif; ?>
 
   <!-- Endast username och password för att logga in. For now -->
   <form method="POST" action="login.php">
