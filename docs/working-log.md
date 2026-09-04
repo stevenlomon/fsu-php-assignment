@@ -183,3 +183,30 @@ med en else?
 Vi behöver en logout oxå haha! Där logiken rimligtvis skulle vara:  
 isLoggedIn -> Logout button  
 !isLoggedIn -> Login form/knapp  
+
+Alright, allt kring auth implementerat! Med validation kvar bara att komma tillbaka till, hittills har jag bara 100% kört happy path haha.  
+
+Jag vill tackla groups.php! Här tänker jag att vi kommer använda `foreach:` control structure! Så nånting i stil med
+```
+<?php foreach($group of $groups): ?>
+  <div>
+    <h2>$group->title</h2>
+    <p>$group->description</p>
+  </div>
+<?php endforeach; ?>
+```
+Och för $groups.. om jag förstår rätt så var inte Next.js först alls med SSR, php kom före med det! Så vi borde kunna hämta ut alla grupper ur databasen, lagra det i en variabel $groups, allt på servern, och sen använda det för att skriva ut HTML för klienten! Jag ska bekräfta detta med Gemini  
+
+Yeah!  
+> Your understanding of SSR is 100% accurate—PHP was doing Server-Side Rendering three decades before Next.js popularized "React Server Components." In PHP, every page is rendered entirely on the server into pure HTML before a single byte reaches the browser.  
+Jag har bara lite syntax grejor jag behöver tänka på i implementeringen nu av groups.php  
+
+`<?php foreach ($groups as $group): ?>` Den här syntaxen... förvirrar mig jättemycket hahaha. Känns inte intuitiv alls  
+
+"Fatal error: Uncaught Error: Undefined constant "MYSQL_ASSOC" in /var/www/html/groups.php:15 Stack trace: #0 {main} thrown in /var/www/html/groups.php on line 15" Hmmmm. Måste vi importera denna? Gemini säger...  
+> Change MYSQL_ASSOC to MYSQLI_ASSOC (with an I).  
+Simpelt haha!  
+![Conditional rendering för grupper fungerar](./screenshots/Screenshot_2026-09-04_15-04-38.png)  
+Och om jag seed:ar vår databas med några grupper via phpMyAdmin och laddar om sidan nu...  
+![Server side rendering!](./screenshots/Screenshot_2026-09-04_15-14-01.png)  
+Let's go 🥳🥳  
