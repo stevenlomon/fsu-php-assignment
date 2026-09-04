@@ -141,3 +141,12 @@ $password = trim($POST['password'] ?? '');
 Tänk vad nyttigt det är att ta ett steg bort från koden och komma tillbaka med fräscha ögon. Jag kör ju med `$POST`, inte `$_POST` haha! Det här är most likely felet. Let's fix it and try again..  
 ![All user data kommer nu in i databasen](./screenshots/Screenshot_2026-09-04_05-50-59.png)  
 Let's go. Moving on!  
+
+Efter en liten refactoring detour med `includes/` och `htmlspecialchars()` integrerad nu tänker jag att jag uppdaterar både databasen och `register.php` att faktiskt fånga email, first name och last name nu. Lite mer friction vid registrering men då skipper vi en onödig database call i profile.php bara för att komplettera användar datan + garanterar G kraven.  
+
+"Fatal error: Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '@gmail.com, '$2y$12$epevwY5QjD8OY9LOCgDla.72x7MZYgbgMZLx2d0oO5pHdPpVFGxHS', S...' at line 2 in /var/www/html/register.php:23 Stack trace: #0 /var/www/html/register.php(23): mysqli->query('INSERT INTO use...') #1 {main} thrown in /var/www/html/register.php on line 23" Hmmmmm. Error:n hintar till ett syntax error som jag.. inte ser alls.  
+Är det något speciellt jag missar när det kommer till emails? "check the manual that corresponds to your MariaDB server version for the right syntax to use near '@gmail.com, '$2y$12$epevwY5QjD8OY9LOCgDla.72x7MZYgbgMZLx2d0oO5pHdPpVFGxHS'" Tänker speicellt detta. Let's ask AI.  
+
+Right. `VALUES ('$username', $email, '$hashedPassword', $firstName, $lastName)";` Vi måste wrap resten av variablerna i `' '` enkelfnuttar oxå!  
+Sen skriver såklart Gemini om hur osäker denna DB INSERT är i och med att prepared statements inte används. Det blir nästa commit.  
+Nu funkar det igen! Och ALL user data är i databasen! 🥳 Let's upgrade till prepared statments. Efter det lägger vi till input data validation.   
