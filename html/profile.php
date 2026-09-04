@@ -1,5 +1,6 @@
 <?php
   require_once __DIR__ . '/includes/helpers.php';
+  require_auth();
 
   $title = "The Retro Vibe";
   $subheader = "Din profil";

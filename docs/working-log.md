@@ -153,4 +153,33 @@ Nu funkar det igen! Och ALL user data är i databasen! 🥳 Let's upgrade till p
 
 "Efter det lägger vi till input data validation." On second thought, nah. Jag har gjort detta i mina fundamentals drills, jag vet hur det funkar, och vill behålla momentum och sharpen my other fundamentals. Let's move on till vår login form.  
 
-Login form.. helt implementerat vill jag säga! Många security best pracices implementerade plus att jag får solidify och crystallize min förståelse för PRG och $_SESSION!
+Login form.. helt implementerat vill jag säga! Många security best pracices implementerade plus att jag får solidify och crystallize min förståelse för PRG och $_SESSION!  
+
+För att solidify och crystallize vår register to login flow:  
+* Vi navigerar till register.php som browsern ger oss via GET
+* Vi fyller i formuläret och trycker Skicka
+* register.php skickar en POST request till sig själv och validerar datan
+* Om datan är valid gör den en redirect till login.php som browsern ger oss via GET
+* Vi fyller i detta formulär och trycker Logga in
+* login.php skickar en POST request till sig själv och validerar datan
+* Om datan är valid gör den en redirect till index.php som browsern ger oss via GET
+Alright. Alright, alright. Det är väldigt annorlunda från Next.js!! Men jag gillar det!  
+
+Och auth blir så simpelt som att kolla så att user ID finns i vår $_SESSION superglobal! Och vi kan skriva en helper function i helpers.php för detta.  
+Jag tänker ju nu dock.. det är egentliga bara profile. php som är den enda hela sidan som ska vara auth skyddad. Man ska 10000% kunna surfa runt på index.html och kolla vilka grupper som finns att gå med i utan att skapa en användare och logga in. Snarare är det ju *funktionalitet* och vissa *sektioner* av web appen som ska vara auth skyddade. Let's brain dump it all out:
+* Välkomstmeddelande på index.php
+* Gå med i grupper
+* Skapa och svara på inlägg
+But that's it, right? Jag tror det. Men require_auth() är en start iaf.  
+
+Jag tänker nu oxå. Kan vi inte skapa en is_logged_in() function som ger en boolean. Och så kör vi bara if satser med t.ex
+```
+<?php if($isLoggedIn): ?>
+  <p style="color: red;"><?= e($successMessage) ?></p>
+<?php endif; ?>
+```
+med en else?  
+
+Vi behöver en logout oxå haha! Där logiken rimligtvis skulle vara:  
+isLoggedIn -> Logout button  
+!isLoggedIn -> Login form/knapp  
