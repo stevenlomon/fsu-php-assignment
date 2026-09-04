@@ -72,7 +72,7 @@ Nu när jag håller på att be Gemini översätta min ERD till SQL pekar den ut 
 
 Det är smidigare att `reply_to` är en self-referential FK till en `Post` eller `NULL` för vi kan hitta `User` via `Post`!  
 Så vår nya ERD..  
-![ERD v1.2](./docs/Screenshot_2026-08-30_14-45-07.png)  
+![ERD v1.2](./erd/Screenshot_2026-08-30_14-45-07.png)  
 There we go.  
 
 Och detta finns nu översatt till SQL i denna [schema.sql fil](./db/schema.sql). Dags att köra det i phpMyAdmin.  
@@ -131,3 +131,13 @@ Succesfully redirected till login.php!
 
 ![Data i databasen!](./screenshots/Screenshot_2026-09-01_19-58-54.png)  
 Och vi har data i databasen!! Men inte username? Det här blir att utreda imorn, I'm gonna call it a day here! Viktiga reps idag  
+
+## Sep 4
+Let's investigate varför username inte sparas i databasen.  
+```
+$username = trim($POST['username'] ?? ''); //TODO: Varför blir denna tom i databasen?
+$password = trim($POST['password'] ?? '');
+```  
+Tänk vad nyttigt det är att ta ett steg bort från koden och komma tillbaka med fräscha ögon. Jag kör ju med `$POST`, inte `$_POST` haha! Det här är most likely felet. Let's fix it and try again..  
+![All user data kommer nu in i databasen](./screenshots/Screenshot_2026-09-04_05-50-59.png)  
+Let's go. Moving on!  

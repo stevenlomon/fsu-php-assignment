@@ -4,8 +4,8 @@
   require_once __DIR__ . '/db.php';
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($POST['username'] ?? ''); //TODO: Varför blir denna tom i databasen?
-    $password = trim($POST['password'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Default sätt att hasha lösenord i php tydligen!
 

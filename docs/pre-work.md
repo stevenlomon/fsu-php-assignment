@@ -10,7 +10,7 @@ Tables:
 * `Topic`
 * `Post`
 
-![ERD v1](./docs/Screenshot_2026-08-30_12-51-36.png)  
+![ERD v1](./erd/Screenshot_2026-08-30_12-51-36.png)  
 
 Vi skulle kunna ha en Auth table för lösenords hash men jag lagrar `hashed_password` i User istället. En uppgradering från förra inlämningsuppgiften iaf där jag lagrade det ohashade lösenordet direkt i dess `User` table haha.  
 Som jag skrev även där, jag har implementerat ordentlig Auth med `jwt`, hashing etc för Florilegium: https://github.com/stevenlomon/florilegium/blob/main/src/app/api/login/route.ts  
