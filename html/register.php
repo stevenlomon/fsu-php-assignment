@@ -15,16 +15,21 @@
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Default sätt att hasha lösenord i php tydligen!
 
-    // *Det* simplaste sättet vi kan insert data i vår databas verkar det som
-    // Bör uppgraderas till prepared statements när vi får detta att funka!
-    $sql = "INSERT INTO users (username, email, hashed_password, fname, lname)
-            VALUES ('$username', '$email', '$hashedPassword', '$firstName', '$lastName')";
+    // Uppgradering till prepared statements för security best practice. 
+    // Funkar liknande till hur det funkar med Postgres + Next.js!
+    $statement = $mysqli->prepare("
+          INSERT INTO users (username, email, hashed_password, fname, lname)
+          VALUES (?, ?, ?, ?, ?)
+        ");
 
-    if($mysqli->query($sql)) {
+    // "sssss" ser löjligt ut haha men betyder att vi tar emot 5st string argument
+    $statement->bind_param("sssss", $username, $email, $hashedPassword, $firstName, $lastName);
+
+    if($statement->execute()) {
       header('Location: /login.php');
       exit;
     } else {
-      echo "Database Error: " . $mysqli->error;
+      echo "Database Error: " . e($statement->error);
     }
   }
 
