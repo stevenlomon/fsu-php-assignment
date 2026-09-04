@@ -8,9 +8,6 @@
 
   $successMessage = $_SESSION['flash_success'] ?? null;
   unset($_SESSION['flash_success']);
-
-  // TODO: Authentication check!
-  // TODO: Visa $successMessage för inloggade användare
 ?>
 
 <!DOCTYPE html>
@@ -26,10 +23,17 @@
     <h2><?= e($subheader) ?></h2>
   </header>
 
+  <?php if (is_logged_in()): ?>
+    <?php if ($successMessage): ?>
+      <p style="color: green;"><?= e($successMessage) ?></p>
+    <?php endif; ?>
+    <a href="profile.php">Profil</a>
+    <a href="logout.php">Logga ut</a>
+  <?php else: ?>
+    <a href="register.php">Registrera</a>
+    <a href="login.php">Logga in</a>
+  <?php endif; ?>
+        
   <a href="groups.php">Alla grupper</a>
-  <a href="profile.php">Profil</a>
-  <a href="register.php">Registrera</a>
-  <a href="login.php">Logga in</a>
-  
 </body>
 </html>
