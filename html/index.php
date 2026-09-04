@@ -3,6 +3,14 @@
 
   $title = "The Retro Vibe";
   $subheader = "Ditt forum för att diskutera retro gaming nostalgi 👾";
+
+  session_start(); // Se kommentar kring denna i `login.php`
+
+  $successMessage = $_SESSION['flash_success'] ?? null;
+  unset($_SESSION['flash_success']);
+
+  // TODO: Authentication check!
+  // TODO: Visa $successMessage för inloggade användare
 ?>
 
 <!DOCTYPE html>

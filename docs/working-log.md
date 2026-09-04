@@ -152,3 +152,5 @@ Sen skriver såklart Gemini om hur osäker denna DB INSERT är i och med att pre
 Nu funkar det igen! Och ALL user data är i databasen! 🥳 Let's upgrade till prepared statments. Efter det lägger vi till input data validation.  
 
 "Efter det lägger vi till input data validation." On second thought, nah. Jag har gjort detta i mina fundamentals drills, jag vet hur det funkar, och vill behålla momentum och sharpen my other fundamentals. Let's move on till vår login form.  
+
+Login form.. helt implementerat vill jag säga! Många security best pracices implementerade plus att jag får solidify och crystallize min förståelse för PRG och $_SESSION!

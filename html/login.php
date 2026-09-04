@@ -38,8 +38,13 @@
 
     // Nu när vi har vår user verifierar vi lösenordet mot det hashade lösenordet i databasen
     if ($user && password_verify($password, $user['hashed_password'])) {
-      // TODO: Lagra user ID i $_SESSION (finns tydligen även något som heter `session_regenerate_id()` här för security)
+      session_regenerate_id(true); // Security best pracitce för att skydda mot session fixation där en hacker potentiellt skulle kunna logga in på någons konto utan deras lösenord
 
+      $_SESSION['user_id'] = (int)$user['id'];
+      $_SESSION['username'] = $user['username'];
+      $_SESSION['flash_success'] = "Välkommen tillbaka, " . $user['username'] . "!";
+
+      // Vi håller vår redirect URL clean
       header('Location: /index.php');
       exit;
     } else {
