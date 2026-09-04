@@ -19,11 +19,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?></title>
-  <p>PHP <?= phpversion()?> running cleanly</p>
-  <h1><?= $title ?></h1>
-  <h2><?= $subheader ?></h2>
 </head>
 <body>
+  <header>
+    <p>PHP <?= phpversion()?> running cleanly</p>
+    <h1><?= $title ?></h1>
+    <h2><?= $subheader ?></h2>
+  </header>
   
 </body>
 </html>
