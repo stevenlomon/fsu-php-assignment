@@ -1,4 +1,6 @@
 <?php
+  require_once __DIR__ . '/includes/helpers.php';
+
   $title = "The Retro Vibe";
 
   // Skaffa grupp ID från URL som ska vara på format /groups/id. Vi passar även på att göra explicit type casting till int!
@@ -23,8 +25,8 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= $title ?></h1>
-    <h2><?= $subheader ?></h2>
+    <h1><?= e($title) ?></h1>
+    <h2><?= e($subheader) ?></h2>
   </header>
   
 </body>

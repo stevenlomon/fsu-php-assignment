@@ -1,4 +1,6 @@
 <?php
+  require_once __DIR__ . '/includes/helpers.php';
+
   $title = "The Retro Vibe";
 
   // Skaffa discussion ID på samma sätt som vi gör i group.php
@@ -22,8 +24,8 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= $title ?></h1>
-    <h2><?= $subheader ?></h2>
+    <h1><?= e($title) ?></h1>
+    <h2><?= e($subheader) ?></h2>
   </header>
   
 </body>

@@ -1,4 +1,6 @@
 <?php
+  require_once __DIR__ . '/includes/helpers.php';
+
   $title = "The Retro Vibe";
   $subheader = "Logga in för att diskutera allt från SNES till PS2 idag!";
 ?>
@@ -13,8 +15,8 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= $title ?></h1>
-    <h2><?= $subheader ?></h2>
+    <h1><?= e($title) ?></h1>
+    <h2><?= e($subheader) ?></h2>
   </header>
   
 </body>

@@ -1,7 +1,8 @@
 <?php
   // Denna fil kommer vara en så kallad self-submitting form; den skickar en POST request till sig själv!
 
-  require_once __DIR__ . '/db.php';
+  require_once __DIR__ . '/includes/helpers.php';
+  require_once __DIR__ . '/includes/db.php';
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -36,8 +37,8 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= $title ?></h1>
-    <h2><?= $subheader ?></h2>
+    <h1><?= e($title) ?></h1>
+    <h2><?= e($subheader) ?></h2>
   </header>
 
   <form method="POST" action="register.php">

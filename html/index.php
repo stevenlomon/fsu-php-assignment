@@ -1,5 +1,8 @@
 <?php
-  $title = "The Retro Vibe"
+  require_once __DIR__ . '/includes/helpers.php';
+
+  $title = "The Retro Vibe";
+  $subheader = "Ditt forum för att diskutera retro gaming nostalgi 👾";
 ?>
 
 <!DOCTYPE html>
@@ -11,10 +14,10 @@
 <body>
   <header>
     <p>PHP <?= phpversion()?> running cleanly</p>
-    <h1><?= $title ?></h1>
-    <h2><?= $subheader ?></h2>
+    <h1><?= e($title) ?></h1>
+    <h2><?= e($subheader) ?></h2>
   </header>
-  
+
   <a href="groups.php">Alla grupper</a>
   <a href="profile.php">Profil</a>
   <a href="register.php">Registrera</a>
