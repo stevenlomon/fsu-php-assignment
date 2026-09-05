@@ -287,3 +287,49 @@ Right. Men då kör vi med $groupId bara! Det är lika korrekt skriver Gemini nu
 ![Ansökningsknappen är clean!](./screenshots/Screenshot_2026-09-05_10-15-39.png)  
 
 apply_group.php nästa!  
+Och jag har inte använt server actions i Next.js mycket än men denna känns som en server action!
+Speciellt i och med att vi literally använder det ordet! `<form method="POST" action="/apply_group.php">`  
+Låt oss se vad Gemini har att säga om detta.  
+
+> Your observation is spot-on. Next.js "Server Actions" are essentially modern React reinventing how the web—and PHP specifically—worked from day one.  
+
+Wow. Wow, wow, wow!
+
+> Yes, every single POST request you have written so far has been `application/x-www-form-urlencoded`.
+> 
+> Standard HTML `<form>` elements cannot send JSON natively. Unless you use JavaScript's `fetch()` or specify `enctype="multipart/form-data"` (used for file uploads), browsers encode submitted form fields into URL-encoded key-value strings in the request body (e.g., group_id=3&user_id=12).  
+
+Det här är oxå en riktig plot twist! Det är så jäkla roligt att widen your horizons, connect the dots and deepen your understanding 🌱  
+
+Alright, `apply_group.php` är skriven. Let's test it with Postman!  
+![Vår första Postman POST request](./screenshots/Screenshot_2026-09-05_11-46-44.png)  
+I.. don't know what to make of this. Jag har inte skickat en POST request till login.php så den borde be mig att logga in. Hmmmm. Det kan hända att jag måste ändra lite i `require_auth()`?  
+![Vi får faktiskt vårt felmeddelande!](./screenshots/Screenshot_2026-09-05_11-55-31.png)  
+Man är bara så var att sätta status codes och att det ska vara rött och att allt ska vara i JSON! Alright!  
+Märker nu dock oxå att jag glömde `?id=`. Så låt oss logga och och skicka med groupId för att få en valid request och se data i databasen.  
+
+"Märker nu dock oxå att jag glömde `?id=`." Det här är fel! Vi ska inte få groupId från URL, vi får det från vår POST! Nevermind.  
+
+![Inloggad via Postman!](./screenshots/Screenshot_2026-09-05_12-06-28.png)  
+![PHP Session ID satt!](./screenshots/Screenshot_2026-09-05_12-06-51.png)  
+Inloggad via Postman för första gången!  
+
+![Error i apply_group.php](./screenshots/Screenshot_2026-09-05_12-08-21.png)  
+Men vi har ett error i apply_group.php. `<b>Warning</b>: Undefined variable $mysqli in <b>/var/www/html/apply_group.php</b> on line <b>23</b><br />`  
+Jag borde kunna fixa detta utan Gemini, lemme see..  
+Ah! Jag importerar inte db.php haha! Nu kör vi igen..  
+![Succesful apphy_group.php POST request](./screenshots/Screenshot_2026-09-05_12-08-21.png)  
+Nu kör det igenom! Och i vår databas...  
+![Vi har data i group_members tabellen!](./screenshots/Screenshot_2026-09-05_12-12-33.png)  
+Let's gooooooo! 🥳🥳  
+
+> However, your test succeeded because both user_id and group_id happened to be 3. There are two critical bugs lurking in that script that will break when those IDs differ.  
+
+Nu ska jag bara fixa lite bugs haha!
+
+> Bug 1: Flipped Parameters in bind_param (The Sneaky One)  
+> Bug 2: HTML Echo Syntax Inside a PHP String  
+> Bug 3: Operator Precedence on `(int)`  
+
+![En buggfri apply_group.php med fungerande redirect](./screenshots/Screenshot_2026-09-05_12-27-28.png)  
+Vi har nu en buggfri apply_group.php och en fungerande redirect!  
