@@ -210,3 +210,24 @@ Simpelt haha!
 Och om jag seed:ar vår databas med några grupper via phpMyAdmin och laddar om sidan nu...  
 ![Server side rendering!](./screenshots/Screenshot_2026-09-04_15-14-01.png)  
 Let's go 🥳🥳  
+
+## Sep 5
+Nästa massive lever-moving steg vi skulle ta är... definitivt i grupperna. Inom nästa två timmarna ska man kunna gå med i grupper. Det första jag vill göra är att ändra group.php så att istället för att den skriver ut "Samlingssida för grupp med id #3" skriver den ut namnet.  
+Vi har id:t, nu kan vi göra en lookup med hjälp av id:t för att hitta den matchande gruppen i databasen, spara det i en variabel $group och därifrån få `name` och `description`! Let's do this now. Det börjar med att vi importerar `db` in till group.php!  
+
+> You do not need to cast the integer to a string. MySQLi natively supports integers using the "i" type flag.  
+> **MySQLi Type Specifiers**  
+> - **`i`**: integer  
+> - **`s`**: string  
+> - **`d`**: double / float  
+> - **`b`**: blob (binary data)  
+Bra att veta!  
+
+```
+$group = $result->fetch_assoc();
+
+// Nu med $group kan vi istället för $groupId använda..
+$subheader = "Samlingssida för " . $group['name']; // String concatenation med `.`!
+```
+![Vi visar nu namnet på gruppen på group.php!](./screenshots/Screenshot_2026-09-05_09-09-22.png)  
+Helt dynamiskt via id:t i URL:en. Fan va satisfying!! 🥳  
