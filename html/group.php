@@ -48,6 +48,11 @@
     <a href="index.php"><h1><?= e($title) ?></h1></a>
     <h2><?= e($subheader) ?></h2>
   </header>
+
+  <form method="POST" action="/apply_group.php">
+    <input type="hidden" name="group_id" value="<?= $groupId ?>" />
+    <button type="submit">Ansök om medlemskap</button>
+  </form>
   
 </body>
 </html>

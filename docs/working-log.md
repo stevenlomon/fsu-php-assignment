@@ -231,3 +231,59 @@ $subheader = "Samlingssida för " . $group['name']; // String concatenation med 
 ```
 ![Vi visar nu namnet på gruppen på group.php!](./screenshots/Screenshot_2026-09-05_09-09-22.png)  
 Helt dynamiskt via id:t i URL:en. Fan va satisfying!! 🥳  
+
+På samlingssidan tänker jag åtminstone:  
+* Antalet gruppmedlemmar (`COUNT` på `group_members` tabellen vilket skulle kräva nån typ av JOIN)  
+* Knapp för att ansöka medlemsskap  
+
+Knappen för att ansöka om medlemsskap.. visst skickar den en POST request för en ny rad i `group_members` med `status: pending`? På tal om det..  
+```
+ALTER TABLE group_members 
+ADD COLUMN status ENUM('pending', 'approved') NOT NULL DEFAULT 'pending' 
+AFTER group_id;
+```
+![group_members tabellen har nu en status kolumn](./screenshots/Screenshot_2026-09-05_09-51-01.png)  
+There we go. Om vi kollar på denna tabell for a few moments..  Jag måste göra så att `joined_at` kan är nullable. Jag tänker att när man ansöker om medlemskap är denna null. Och the moment `status` ändras från `pending` till `approved` (via en PATCH request) fångar vi timestamp och det blir `joined_at`. Ska bolla detta med Gemini men det låter rimligt.  
+
+Okej, väldigt mycket nyttigheter här.  
+> Your database logic here is spot-on: someone in pending status has applied, not joined. Having a timestamp in joined_at while status = 'pending' is misleading.  
+
+> The "Ansök" Button MUST Be a POST Request
+> Applying to a group mutates data in the database, so it must never be a plain `<a>` link (which issues a safe, cacheable GET).
+> Use a compact form with a hidden input for the target group:
+> ```
+> <form method="POST" action="/apply_group.php">
+>   <input type="hidden" name="group_id" value="<?= (int)$group['id'] ?>">
+>   <button type="submit">Ansök om medlemskap</button>
+> </form>
+> ```
+> The handler (apply_group.php) runs require_auth(), grabs $_SESSION['user_id'] and $_POST['group_id'], and performs the insert with status = 'pending'.
+
+> Note on "PATCH" Requests in Plain PHP
+> In pure Server-Side Rendered (SSR) web applications, standard HTML forms only support GET and POST:
+> `<form method="PATCH">` is not valid HTML and will simply default back to a GET request in the browser.
+> Because you aren't using JavaScript fetch() or React, your approval action will simply be another standard POST form that follows the PRG pattern  
+
+Alright! Mycket att ta in på en gång men vi tar det steg för steg för steg! Nästa steg:  
+```
+ALTER TABLE group_members 
+MODIFY joined_at TIMESTAMP NULL DEFAULT NULL;
+```
+Och sen tacklar vi "Ansök om medlemskap" knappen  
+
+Jag körde precis SQL query:n och tänker.. ska vi ha en till timestamp? `applied_at`? Känner nästan det. Ska bolla.  
+```
+ALTER TABLE group_members 
+ADD COLUMN applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+AFTER status;
+```
+Vi kör på det!  
+
+Det här...
+![Nånting saknas i form knappen](./screenshots/Screenshot_2026-09-05_10-10-07.png)  
+..ser inte korrekt ut alls haha. I must be missing something.  
+> Because id was never fetched from MariaDB, $group['id'] does not exist.  
+Right. Men då kör vi med $groupId bara! Det är lika korrekt skriver Gemini nu och nu har vi en knapp!  
+![Ansökningsknappen är clean!](./screenshots/Screenshot_2026-09-05_10-15-39.png)  
+
+apply_group.php nästa!  
