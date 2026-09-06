@@ -333,3 +333,30 @@ Nu ska jag bara fixa lite bugs haha!
 
 ![En buggfri apply_group.php med fungerande redirect](./screenshots/Screenshot_2026-09-05_12-27-28.png)  
 Vi har nu en buggfri apply_group.php och en fungerande redirect!  
+
+## Sep 6
+Vi kan nu klicka på en knapp för att ansöka om medlemskap i grupper. Nu tänker jag att vi bygger en liknande "Server Action" (tror de heter Action Handler eller Form Handler i php) för att skapa grupper.  
+Eller? Hmmm. Skulle vi annars kunna ha det så att groups.php blir en self submitting form, att den hanterar formuläret och POST requests. Tror detta är simplast.
+I och med skapandet av grupper tänker jag lägga till `role` i `group_members`: en enum likt `status`: `status	enum('pending', 'approved')	utf8mb4_general_ci	`, som tar antingen `member` eller `admin`, även om jag bara går för G. När man skapar en grupp blir man `admin` i gruppen. Så let's bolla hur vi smidigast implementerar formuläret för att skapa grupper och be om SQL query:n för att lägga till denna kolumn i `group_members`.  
+
+> A self-submitting groups.php is an excellent architectural choice here.  
+
+> The golden rule (PRG): On a successful creation, you still invoke header("Location: /group.php?id={$newGroupId}") and exit;. This ensures users don't accidentally re-submit the form if they refresh.
+
+Beautiful. Då börjar vi med denna SQL query i phpMyAdmin:
+```
+ALTER TABLE group_members 
+ADD COLUMN role ENUM('member', 'admin') NOT NULL DEFAULT 'member' 
+AFTER status;
+```
+Succesful utan problem. Så, planen nu:
+* Skriv koden för att skapa grupp
+* Skapa en grupp inloggad som en användare för att bli admin över den gruppen
+* Logga in som en annan användare och ansök om medlemskap
+* Koda upp UI för att se ansökningar i en grupp
+* Godkänn ansökan som den första användaren
+* Koda upp "Mina grupper"
+* Logga in som den andra användaren och se gruppen vi nu är medlem i under "Mina grupper"  
+Det är mycket men nu har vi clarity! Let's do it  
+
+Alright! Vi kan skapa grupper och vi ser de populera groups.php när vi skapar dem! Nu behöver vi bara sätta den inloggade användaren till admin
