@@ -12,32 +12,56 @@
   unset($_SESSION['error_message']);
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Man ska endast kunna skapa grupper om man är inloggad!
+    require_auth();
+
     $name = trim($_POST['name'] ?? '');
     $description = trim($_POST['description'] ?? ''); 
     
     // Simpel validering: namn måste vara minst 3 karaktärer lång
     if (strlen($name) < 3) {
-      $errorMessage = "Namnet på gruppen måste vara minst 3 karaktärer långt";
+      $_SESSION['error_message'] = "Namnet på gruppen måste vara minst 3 karaktärer långt"; // `$_SESSION['error_message']`, inte `$errorMessage`!
       header('Location: /groups.php');
       exit;
       }
       
     $description = $description === '' ? null : $description; // `description` är nullable i databasen. Om den saknas i vår POST sätter vi den explicitly till NULL
     
-    // Vi har valid data för att skapa en grupp. Lägg in gruppen i databasen
-    $statement = $mysqli->prepare("
+    // Vi har valid data för att skapa en grupp. Lägg in gruppen i databasen och direkt efter; lägg till den inloggade användaren som 
+    // admin i den skapade gruppen! Detta skulle kunna uppgraderas till en transaction med $mysqli->begin_transaction();
+    $groupStatement = $mysqli->prepare("
       INSERT INTO groups(name, description)
       VALUES (?, ?)
     ");
 
-    $statement->bind_param("ss", $name, $description);
+    $groupStatement->bind_param("ss", $name, $description);
 
-    if($statement->execute()) {
-      header('Location: /groups.php');
-      exit;
-    } else {
-      echo "Database Error: " . e($statement->error);
+    // Fail early med `die()`!
+    if (!$groupStatement->execute()) {
+        die("Kunde inte skapa grupp: " . e($groupStatement->error));
     }
+
+    // Plocka ut det nya grupp-ID:t direkt från MySQLi
+    $newGroupId = (int)$mysqli->insert_id;
+
+    // Nu med detta id lägger vi in den inloggade användaren som admin i group_members!
+    $userId = (int)$_SESSION['user_id'];
+
+    // joined_at är den enda timestamp i vår databas som kan vara NULL och *inte* hanteras automatiskt av databasen! 
+    // Vi måste manuellt sätta den till NOW() här
+    $memberStatement = $mysqli->prepare("
+        INSERT INTO group_members (user_id, group_id, status, role, joined_at)
+        VALUES (?, ?, 'approved', 'admin', NOW())
+    ");
+    $memberStatement->bind_param("ii", $userId, $newGroupId);
+
+    if (!$memberStatement->execute()) {
+        die("Kunde inte knyta användare till grupp: " . e($memberStatement->error));
+    }
+
+    // Nu är vi 100% in the clear att vi har ren data i databasen. Redirect till den nyskapade gruppen! 
+    header("Location: /group.php?id={$newGroupId}");
+    exit;
   }
 
   // Hämta alla grupper direkt på servern som en array av associativa arrayer!
@@ -77,7 +101,8 @@
     </div>
   <?php endif; ?>
 
-  <!-- Formuläret för att skapa en grupp visas vare sig det finns grupper eller inte -->
+  <!-- Formuläret för att skapa en grupp visas vare sig det finns grupper eller inte. Men bara om man är inloggad! -->
+  <?php if (is_logged_in()): ?>
    <h3>Skapar du hellre en egen grupp för att diskutera något som inte finns ovan? Gör det här!</h3>
 
    <?php if($errorMessage): ?>
@@ -93,5 +118,8 @@
 
       <button type="submit">Skapa grupp</button>
    </form>
+  <?php else: ?>
+  <p><a href="/login.php">Logga in</a> eller <a href="/register.php">skapa ett konto</a> för att starta en egen grupp.</p>
+  <?php endif; ?>
 </body>
 </html>
