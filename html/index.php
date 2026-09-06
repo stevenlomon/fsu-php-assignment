@@ -4,7 +4,7 @@
   $title = "The Retro Vibe";
   $subheader = "Ditt forum för att diskutera retro gaming nostalgi 👾";
 
-  session_start(); // Se kommentar kring denna i `login.php`
+  // session_start(); // Se kommentar kring denna i `login.php` // Sätts nu av helpers.php!
 
   $successMessage = $_SESSION['flash_success'] ?? null;
   unset($_SESSION['flash_success']);

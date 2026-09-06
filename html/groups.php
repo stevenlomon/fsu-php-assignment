@@ -6,7 +6,7 @@
   $title = "The Retro Vibe";
   $subheader = "Alla grupper. Gå med i en idag!";
 
-  session_start(); // För felmeddelanden när vi skickar POST till filen själv: PRG
+  // session_start(); // För felmeddelanden när vi skickar POST till filen själv: PRG // Denna sätts nu av helpers.php!
 
   $errorMessage = $_SESSION['error_message'] ?? null;
   unset($_SESSION['error_message']);

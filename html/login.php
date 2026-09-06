@@ -9,7 +9,7 @@
   // PRG sköter omdirigeringen till säkra, idempotenta GET-requests så att refresh inte återupprepar POST-anropet; om
   // en användare refresh:ar sidan 50 gånger ska inte 50 POST request skickas. 
   // session_start() behövs för att använda $_SESSION där vi lagrar $errorMessage.
-  session_start(); 
+  // session_start(); Sätts nu av helpers.php!
 
   $errorMessage = $_SESSION['error_message'] ?? null;
   unset($_SESSION['error_message']); // `unset()` klagar eller kraschar inte om nyckeln inte finns! Så vi behöver inte wrappa dessa två rader i en `if (isset(...)) {`

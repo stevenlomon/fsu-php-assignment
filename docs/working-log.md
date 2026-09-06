@@ -367,3 +367,6 @@ Blir det nån typ av race condition här i och med the redirect? Loggades jag ut
 
 Right, så om jag förstår det rätt har det med att group.php inte har en session_start();  
 Och the clean solution är att låta helpers.php köra session management ordenligt vilket den nu gör!  
+
+![Nu får vi en notice jag aldrig sett tidigare](./screenshots/Screenshot_2026-09-06_10-26-00.png)  
+Jag vet precis vad vi ska göra åt detta; nu behövs inte session_start() i någon av våra filer som importerar helpers.php!  
