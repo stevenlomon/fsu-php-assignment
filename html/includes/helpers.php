@@ -44,3 +44,18 @@ function get_group_membership(mysqli $mysqli, int $groupId, int $userId): ?array
 
   return $result->fetch_assoc() ?: null; // ?: kallas the Elvis operator, låter bissart men sant haha! `$a ?: $b` är shorthand för `$a ? $a : $b`
 }
+
+function get_group(mysqli $mysqli, int $groupId): ?array {
+ $statement = $mysqli->prepare("
+    SELECT name, description
+    FROM groups
+    WHERE id = ?
+    LIMIT 1
+  ");
+  $statement->bind_param("i", $groupId);
+
+  $statement->execute();
+  $result = $statement->get_result();
+
+  return $result->fetch_assoc() ?: null; 
+}

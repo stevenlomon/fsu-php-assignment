@@ -1,5 +1,6 @@
 <?php
   require_once __DIR__ . '/includes/helpers.php';
+  require_once __DIR__ . '/includes/db.php';
 
   $title = "The Retro Vibe";
 
@@ -12,7 +13,9 @@
     exit;
   }
 
-  $subheader = "Alla diskussioner i grupp med id #" . $groupId;
+  $group = get_group($mysqli, $groupId);
+
+  $subheader = "Alla diskussioner i gruppen " . $group['name'];
 ?>
 
 <!DOCTYPE html>
