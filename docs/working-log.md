@@ -360,3 +360,10 @@ Succesful utan problem. Så, planen nu:
 Det är mycket men nu har vi clarity! Let's do it  
 
 Alright! Vi kan skapa grupper och vi ser de populera groups.php när vi skapar dem! Nu behöver vi bara sätta den inloggade användaren till admin
+
+![Första gången jag ser denna varning](./screenshots/Screenshot_2026-09-06_10-15-01.png)  
+This is a first, aldrig sett denna varning tidigare. Line 14 i vår helpers.php..  
+Blir det nån typ av race condition här i och med the redirect? Loggades jag ut under the redirect? Let's bring this to Gemini  
+
+Right, så om jag förstår det rätt har det med att group.php inte har en session_start();  
+Och the clean solution är att låta helpers.php köra session management ordenligt vilket den nu gör!  
