@@ -370,3 +370,6 @@ Och the clean solution är att låta helpers.php köra session management ordenl
 
 ![Nu får vi en notice jag aldrig sett tidigare](./screenshots/Screenshot_2026-09-06_10-26-00.png)  
 Jag vet precis vad vi ska göra åt detta; nu behövs inte session_start() i någon av våra filer som importerar helpers.php!  
+
+![Fungerande auth guard i group.php](./screenshots/Screenshot_2026-09-06_10-31-48.png)  
+Och auth guard är nu fully functioning i group.php, nice!  

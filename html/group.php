@@ -49,10 +49,14 @@
     <h2><?= e($subheader) ?></h2>
   </header>
 
-  <form method="POST" action="/apply_group.php">
-    <input type="hidden" name="group_id" value="<?= $groupId ?>" />
-    <button type="submit">Ansök om medlemskap</button>
-  </form>
+  <?php if (is_logged_in()): ?>
+    <form method="POST" action="/apply_group.php">
+      <input type="hidden" name="group_id" value="<?= $groupId ?>" />
+      <button type="submit">Ansök om medlemskap</button>
+    </form>
+  <?php else: ?>
+    <p><a href="/login.php">Logga in</a> eller <a href="/register.php">skapa ett konto</a> för att ansöka om medlemskap.</p>
+  <?php endif; ?>
   
 </body>
 </html>
