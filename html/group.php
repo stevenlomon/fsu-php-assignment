@@ -33,6 +33,11 @@
 
   // Nu med $group kan vi istället för $groupId använda..
   $subheader = "Samlingssida för " . $group['name']; // String concatenation med `.`!
+
+  $membership = null;
+  if (is_logged_in()) {
+      $membership = get_group_membership($mysqli, $groupId, (int)$_SESSION['user_id']);
+  }
 ?>
 
 <!DOCTYPE html>
@@ -49,13 +54,32 @@
     <h2><?= e($subheader) ?></h2>
   </header>
 
-  <?php if (is_logged_in()): ?>
+  <?php if (!is_logged_in()): ?>
+
+    <p><a href="/login.php">Logga in</a> eller <a href="/register.php">skapa ett konto</a> för att ansöka om medlemskap.</p>
+
+  <?php elseif ($membership === null): ?>
+
+    <!-- Användaren är inloggad men har inte ansökt ännu -->
     <form method="POST" action="/apply_group.php">
       <input type="hidden" name="group_id" value="<?= $groupId ?>" />
       <button type="submit">Ansök om medlemskap</button>
     </form>
-  <?php else: ?>
-    <p><a href="/login.php">Logga in</a> eller <a href="/register.php">skapa ett konto</a> för att ansöka om medlemskap.</p>
+
+  <?php elseif ($membership['status'] === 'pending'): ?>
+
+    <!-- Ansökan är inskickad men inte godkänd än -->
+    <p>Din medlemsansökan har skickats och väntar på godkännande.</p>
+
+  <?php elseif ($membership['status'] === 'approved'): ?>
+    
+    <!-- Fullvärdig medlem. Visa roll och alla diskussioner -->
+    <p style="color: green; font-weight: bold;">
+      Du är medlem (Roll: <?= e($membership['role']) ?>)
+    </p>
+
+    <a href="/discussions.php?groupId=<?=$groupId?>">Se alla diskussioner</a>
+    
   <?php endif; ?>
   
 </body>

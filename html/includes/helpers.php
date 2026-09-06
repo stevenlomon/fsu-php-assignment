@@ -29,3 +29,18 @@ function require_auth(): void {
     exit; // Denna är EXTRA viktig vid auth kontroll! Utan denna körs resten av sidan i bakgrunden!
   }
 }
+
+function get_group_membership(mysqli $mysqli, int $groupId, int $userId): ?array { // `?array` betyder nullable!
+  $statement = $mysqli->prepare("
+    SELECT status, role
+    FROM group_members
+    WHERE group_id = ? AND user_id = ?
+    LIMIT 1
+  ");
+  $statement->bind_param("ii", $groupId, $userId);
+
+  $statement->execute();
+  $result = $statement->get_result();
+
+  return $result->fetch_assoc() ?: null; // ?: kallas the Elvis operator, låter bissart men sant haha! `$a ?: $b` är shorthand för `$a ? $a : $b`
+}

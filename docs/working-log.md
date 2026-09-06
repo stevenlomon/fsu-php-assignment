@@ -373,3 +373,19 @@ Jag vet precis vad vi ska göra åt detta; nu behövs inte session_start() i nå
 
 ![Fungerande auth guard i group.php](./screenshots/Screenshot_2026-09-06_10-31-48.png)  
 Och auth guard är nu fully functioning i group.php, nice!  
+
+Just nu är "Ansök om medlemskap" knappen även om man redan är medlem i en grupp, let's fix that next.  
+Jag tänker att vi kan skapa en helper function is_group_member() som har group_id och user_id och ger antingen true eller false. Och med denna kan vi göra conditional rendering på knappen. Ska bolla detta med Gemini.  
+
+> A simple boolean check like is_group_member() is a good start, but it misses a critical distinction in your database: the pending status.  
+
+> If your helper only returns true or false, you cannot distinguish between an applicant waiting for approval and a full member who can post.
+> A More Versatile Helper: get_group_membership()  
+
+Right. Då implementerar vi detta!  
+
+![Medlemskap case #1](./screenshots/Screenshot_2026-09-06_13-16-44.png)  
+![Medlemskap case #2](./screenshots/Screenshot_2026-09-06_13-17-42.png)  
+![Medlemskap case #3](./screenshots/Screenshot_2026-09-06_13-17-54.png)  
+![Medlemskap case #4](./screenshots/Screenshot_2026-09-06_13-18-30.png)  
+Våra 4 cases när det kommer till medlemskap, all working! Beautiful 🥳  
