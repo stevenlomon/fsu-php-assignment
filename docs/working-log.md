@@ -447,3 +447,29 @@ Alright.
 Finns även lite jag behöver fixa och finslipa.  
 ![Inline style acceptera/neka knappar](./screenshots/Screenshot_2026-09-07_07-28-42.png)  
 Snyggt. Med en form och en fil `handle_application.php` kopplad som blir nästa nu att implementera!  
+
+Jag kommer även att göra en databas ändring till här. Gemini föreslog först  
+```
+} elseif ($action === 'deny') {
+    $stmt = $mysqli->prepare("
+        DELETE FROM group_members 
+        WHERE id = ? AND group_id = ? AND status = 'pending'
+    ");
+```
+"Ghost rejection". Dålig UX. Jag föreslog att lägga till en tredje status 'denied' vilket leder till ett produktval:  
+> If you go with 'denied', should users be locked out permanently, or do you want to let them submit a fresh application?  
+
+To which I replied att vi kör med "Vänta 30 dagar innan du kan ansöka igen". Vilket definitivt går att implementera!  
+> Yes, absolutely! Implementing a 30-day cooldown is a realistic, professional feature that prevents spam while giving users a second chance.  
+
+Det kommer kräva mycket kod but it will be worth it! Kanske ändrar till 10 eller 15 dagar istället tho, 30 kanske är att ta i haha  
+
+```
+ALTER TABLE group_members 
+MODIFY COLUMN status ENUM('pending', 'approved', 'denied') NOT NULL DEFAULT 'pending',
+ADD COLUMN denied_at TIMESTAMP NULL DEFAULT NULL 
+AFTER applied_at;
+```
+Följande SQL körs och följande konstant läggs till i ? helpers.php`:  
+`const MEMBERSHIP_COOLDOWN_DAYS = 14;`  
+14 är ett perfectly fair val tycker jag.  
