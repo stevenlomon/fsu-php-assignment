@@ -405,4 +405,45 @@ Jag ser verkligen inte felet. Funktionen ser korrekt ut. Det blir att ge det til
 `return $result->fetch_all(MYSQLI_ASSOC);`, inte `return $result->fetch_assoc() ?: null; `  
 
 ![Vi kan se ansökningar!](./screenshots/Screenshot_2026-09-07_07-11-20.png)  
-Let's go
+Let's go  
+
+Låt oss nu logga in som en annan användare och ansöka om medlemskap i PSX gruppen!  
+![BobTheGamer!!](./screenshots/Screenshot_2026-09-07_07-14-50.png)  
+That is so fucking SATISFYING 🥳🥳  
+
+Alright.  
+`<!-- Formulär för att godkänna kommer här: To be implemented -->`  
+Dags för detta!  
+Har en väldigt stark känsla av att vi kommer använda samma teknik som `apply_group.php` här: hidden form "Server Action"!  
+
+Kopierade det vi hade i vår andra och ändrade till det där ut flow state  
+```
+<?php foreach ($pendingApplications as $app): ?>
+  <li>
+    <strong><?= e($app['username']) ?></strong> 
+    (Ansökte: <?= e($app['applied_at']) ?>)
+    
+    <form method="POST" action="/accept_member.php">
+      <input type="hidden" name="user_id" value="<?= $app['user_id'] ?>" />
+      <button type="submit">Acceptera</button>
+    </form>
+    <form method="POST" action="/deny_member.php">
+      <input type="hidden" name="user_id" value="<?= $app['user_id'] ?>" />
+      <button type="submit">Neka</button>
+    </form>
+  </li>
+<?php endforeach; ?>
+```
+Det känns korrekt! Vet dock inte ifall vi behöver två filer eller om vi kan köra i samma fil. Ska bolla med Gemini nu  
+
+> Use one file (e.g., /handle_application.php).  
+
+> You can even combine them into a single `<form>` per applicant using distinct button values:
+
+Alright. 
+
+> Your current snippet is missing two critical pieces of data:  
+
+Finns även lite jag behöver fixa och finslipa.  
+![Inline style acceptera/neka knappar](./screenshots/Screenshot_2026-09-07_07-28-42.png)  
+Snyggt. Med en form och en fil `handle_application.php` kopplad som blir nästa nu att implementera!  

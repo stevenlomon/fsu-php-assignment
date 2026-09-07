@@ -104,7 +104,16 @@
                 <strong><?= e($app['username']) ?></strong> 
                 (Ansökte: <?= e($app['applied_at']) ?>)
                 
-                <!-- Formulär för att godkänna kommer här: To be implemented -->
+                <!-- En form, en fil för att båda acceptera och neka! -->
+                <form method="POST" action="/handle_application.php" style="display:inline;">
+                  <input type="hidden" name="group_id" value="<?= $groupId ?>">
+                  <input type="hidden" name="application_id" value="<?= (int)$app['application_id'] ?>">
+                  
+                  <!-- Det här är helt nytt för mig; `name=` på en button! Men det är härifrån vi
+                       kommer kunna plocka ut `$action = $_POST['action'] i handle_application.php! -->
+                  <button type="submit" name="action" value="accept">Acceptera</button>
+                  <button type="submit" name="action" value="deny">Neka</button>
+                </form>
               </li>
             <?php endforeach; ?>
           </ul>
