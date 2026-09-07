@@ -79,6 +79,13 @@
 
     <!-- Ansökan är inskickad men inte godkänd än -->
     <p>Din medlemsansökan har skickats och väntar på godkännande.</p>
+  
+  <?php elseif ($membership['status'] === 'denied'): ?>
+
+    <!-- Vår nya status i group_members! -->
+    <p style="color: red;">
+      Din ansökan om medlemskap i denna grupp har avslagits.
+    </p>
 
   <?php elseif ($membership['status'] === 'approved'): ?>
 

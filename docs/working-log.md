@@ -470,6 +470,10 @@ MODIFY COLUMN status ENUM('pending', 'approved', 'denied') NOT NULL DEFAULT 'pen
 ADD COLUMN denied_at TIMESTAMP NULL DEFAULT NULL 
 AFTER applied_at;
 ```
-Följande SQL körs och följande konstant läggs till i ? helpers.php`:  
+Följande SQL körs och följande konstant kommer läggas till i ? helpers.php`:  
 `const MEMBERSHIP_COOLDOWN_DAYS = 14;`  
 14 är ett perfectly fair val tycker jag.  
+
+Låt oss testa 'denied' nu innan vi lägger till membership cooldown. Let's deny Bob haha  
+![Bob är permanently denied](./screenshots/Screenshot_2026-09-07_07-57-21.png)  
+Permanently DENIED haha. Låt oss implementera 14 day cooldown! Kommer ta mycket hjälp av Gemini här.  
