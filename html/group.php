@@ -41,6 +41,12 @@
   if (is_logged_in()) {
       $membership = get_group_membership($mysqli, $groupId, (int)$_SESSION['user_id']);
   }
+
+  // Följande körs endast om den inloggade användaren är admin över gruppen i fråga!
+  $pendingApplications = [];
+  if ($membership && $membership['role'] === 'admin') {
+    $pendingApplications = get_pending_group_applications($mysqli, $groupId);
+  }
 ?>
 
 <!DOCTYPE html>
@@ -76,14 +82,37 @@
 
   <?php elseif ($membership['status'] === 'approved'): ?>
 
-    <!-- Fullvärdig medlem. Visa roll och alla diskussioner -->
+    <!-- Fullvärdig medlem. Visa roll, ansökningar (om man är admin!), medlemmar, och knapp till alla diskussioner -->
     <p style="color: green; font-weight: bold;">
       Du är medlem (Roll: <?= e($membership['role']) ?>)
     </p>
 
+    <h3>Medlemmar</h3>
+    <section>
+      <!-- foreach över gruppmedlemmar; skapa en helper function get_group_members()? To be implemented -->
+    </section>
+
+    <?php if($membership['role'] === 'admin'): ?>
+      <h3>Ansökningar (<?= count($pendingApplications) ?>)</h3>
+
+      <?php if(empty($pendingApplications)): ?>
+        <p>Inga väntande ansökningar.</p>
+      <?php else: ?>
+          <ul>
+            <?php foreach ($pendingApplications as $app): ?>
+              <li>
+                <strong><?= e($app['username']) ?></strong> 
+                (Ansökte: <?= e($app['applied_at']) ?>)
+                
+                <!-- Formulär för att godkänna kommer här: To be implemented -->
+              </li>
+            <?php endforeach; ?>
+          </ul>
+    <?php endif; ?>
+
     <a href="/discussions.php?groupId=<?=$groupId?>">Se alla diskussioner</a>
     
+    <?php endif; ?>
   <?php endif; ?>
-  
 </body>
 </html>

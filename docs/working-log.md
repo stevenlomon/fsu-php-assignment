@@ -389,3 +389,20 @@ Right. Då implementerar vi detta!
 ![Medlemskap case #3](./screenshots/Screenshot_2026-09-06_13-17-54.png)  
 ![Medlemskap case #4](./screenshots/Screenshot_2026-09-06_13-18-30.png)  
 Våra 4 cases när det kommer till medlemskap, all working! Beautiful 🥳  
+
+## Sep 7
+Nu ser jag så tydligt hur vi kan integrera helper functions som get_group_membership() och group(), får se vad nästa blir.  
+"* Koda upp UI för att se ansökningar i en grupp" Låt oss tackla detta!  
+Och för detta behöver vi vår första INNER JOIN! group_members kopplad med users via user_id  
+
+"Ansökningar (
+Fatal error: Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /var/www/html/group.php:96 Stack trace: #0 {main} thrown in /var/www/html/group.php on line 96" Alright, vaaaad har hänt här haha?  
+Nånting är null. Vi kör count på.. `$pendingApplications`. Varför är den null??  
+Om vi inte har några pending applications ska den vara `[]`, inte null, right?  
+Jag ser verkligen inte felet. Funktionen ser korrekt ut. Det blir att ge det till Gemini.  
+
+"Funktionen ser korrekt ut." But it's not haha. Det är sista raden i funktionen. Vi ska ha flera rader.  
+`return $result->fetch_all(MYSQLI_ASSOC);`, inte `return $result->fetch_assoc() ?: null; `  
+
+![Vi kan se ansökningar!](./screenshots/Screenshot_2026-09-07_07-11-20.png)  
+Let's go

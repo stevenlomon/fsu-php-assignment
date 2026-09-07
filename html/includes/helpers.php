@@ -59,3 +59,20 @@ function get_group(mysqli $mysqli, int $groupId): ?array {
 
   return $result->fetch_assoc() ?: null; 
 }
+
+function get_pending_group_applications(mysqli $mysqli, int $groupId): ?array {
+  $statement = $mysqli->prepare("
+    SELECT gm.id AS application_id, gm.user_id, gm.applied_at, u.username
+    FROM group_members gm
+    INNER JOIN users u ON gm.user_id = u.id
+    WHERE gm.group_id = ? AND gm.status = 'pending'
+    ORDER BY gm.applied_at ASC
+  ");
+  $statement->bind_param("i", $groupId);
+
+  $statement->execute();
+  $result = $statement->get_result();
+
+  // Returnera *alla* rader. Om det inte finns några, blir det en tom array []
+  return $result->fetch_all(MYSQLI_ASSOC);
+}
