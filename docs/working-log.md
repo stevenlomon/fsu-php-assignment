@@ -494,3 +494,17 @@ Då är det dessa nu. Låt oss koda upp "Mina grupper". Jag tänker en helper fu
 * I `group_members` behöver vi att `user_id` === `$_SESSION['user_id']`  
 * `status` måste vara `approved`  
 I think that's it
+
+![Mina grupper uppkodad](./screenshots/Screenshot_2026-09-08_08-52-08.png)  
+Snyggt. Och om jag nu *accepterar* Bob istället i en ny grupp..  
+![Bob accepterad in i en grupp nu synlig på Mina Sidor](./screenshots/Screenshot_2026-09-08_09-00-31.png)  
+Let's GO 🥳  
+
+Nu är det bara diskussioner kvar!  
+Jag kommer strukturera upp det här väldigt lik grupper:  
+* Om det inte finns några diskussioner i en grupp uppmanas man att vara den första att skapa en  
+* Annars listas alla diskussioner med en `<?php foreach ($discussions as $discussion): ?>`  
+* Whatever the case så visas på slutet av sidan formuläret för att starta en diskussion  
+* Alla diskussioner är klickbara med `<a href="/discussion.php?id=<?= (int)$discussion['id'] ?>">Ta del av diskussion</a>`
+* På `discussion.php` visar vi replies. Här kommer jag nog behöva bolla lite med AI igen.
+Mycket copy paste, let's do it.  

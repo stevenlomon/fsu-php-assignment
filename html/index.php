@@ -30,6 +30,7 @@
       <p>Inloggad som <strong><?= e($_SESSION['username'] ?? 'Användare') ?></strong></p>
     <?php endif; ?>
     <a href="profile.php">Profil</a>
+    <a href="my_groups.php">Mina grupper</a>
     <a href="logout.php">Logga ut</a>
   <?php else: ?>
     <a href="register.php">Registrera</a>
