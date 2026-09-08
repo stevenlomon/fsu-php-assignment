@@ -14,10 +14,17 @@
   }
 
   $group = get_group($mysqli, $groupId);
-
   $subheader = "Alla diskussioner i gruppen " . $group['name'];
 
   $discussions = get_discussions_for_group($mysqli, $groupId);
+
+  $errorMessage = $_SESSION['error_message'] ?? null;
+  unset($_SESSION['error_message']);
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Man ska endast kunna skapa diskussioner om man är inloggad!
+    require_auth();
+  }
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +59,25 @@
         </div>
       <?php endforeach; ?>
     </div>
+  <?php endif; ?>
+
+  <!-- Formuläret för att skapa en duskussion visas vare sig det finns grupper eller inte. Men bara om man är inloggad! -->
+  <?php if (is_logged_in()): ?>
+   <h3>Skapa ny diskussion här!</h3>
+
+   <?php if($errorMessage): ?>
+    <p style="color: red;"><?= e($errorMessage) ?></p>
+    <?php endif; ?>
+
+   <form method="POST" action="discussions.php">
+      <label for="name">Titel</label>
+      <input id="name" name="name" type="text" required>
+      
+      <label for="description">Inlägg</label>
+      <textarea id="description" name="description" type="" placeholder="Vad har du på ditt gamer hjärta?"></textarea> <!-- 2012 era internet cringe; I *love* it haha -->
+
+      <button type="submit">Skapa diskussion</button>
+   </form>
   <?php endif; ?>
   
 </body>
