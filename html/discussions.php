@@ -24,6 +24,45 @@
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Man ska endast kunna skapa diskussioner om man är inloggad!
     require_auth();
+
+    $title = trim($_POST['title'] ?? '');
+    $content = trim($_POST['content'] ?? ''); 
+    
+    // Simpel validering: titel måste vara minst 3 karaktärer lång, innehåller måste vara minst 10 (for now, låter rimligt?)
+    if (strlen($title) < 3) {
+      $_SESSION['error_message'] = "Titeln på diskussionen måste vara minst 3 karaktärer långt"; 
+      header("Location: /discussions.php?groupId={$groupId}");
+      exit;
+    }
+    if (strlen($content) < 10) {
+      $_SESSION['error_message'] = "Innehålle måste vara minst 10 karaktärer långt"; 
+      header("Location: /discussions.php?groupId={$groupId}");
+      exit;
+    }
+      
+    // På DENNA sida är title *inte* nullable. På discussion.php kommer den vara det. Här kräver vi ett värde på både titel och innehåll
+    
+    // Vi har valid data för att skapa en diskussion
+    // På denna sida är reply_to alltid NULL
+    $statment = $mysqli->prepare("
+      INSERT INTO posts(user_id, group_id, title, reply_to, content)
+      VALUES (?, ?, ?, NULL, ?)
+    ");
+
+    // int, int, string, string. Intressant kombination haha. Vi binder aldrig NULL!
+    $statment->bind_param("iiss", $_SESSION['user_id'], $groupId, $title, $content);
+
+    // Fail early med `die()`
+    if (!$statment->execute()) {
+        die("Kunde inte skapa diskussion: " . e($statment->error));
+    }
+
+    // Plocka ut det nya grupp-ID:t direkt från MySQLi för redirect
+    $newDiscussionId = (int)$mysqli->insert_id;
+
+    // Nu är vi 100% in the clear att vi har ren data i databasen. Redirect till den nyskapade diskusisonen! 
+    header("Location: /discussion.php?id={$newDiscussionId}");
+    exit;
   }
 ?>
 
@@ -69,12 +108,12 @@
     <p style="color: red;"><?= e($errorMessage) ?></p>
     <?php endif; ?>
 
-   <form method="POST" action="discussions.php">
-      <label for="name">Titel</label>
-      <input id="name" name="name" type="text" required>
+   <form method="POST" action="discussions.php?groupId=<?= $groupId ?>">
+      <label for="title">Titel</label>
+      <input id="title" name="title" type="text" required>
       
-      <label for="description">Inlägg</label>
-      <textarea id="description" name="description" type="" placeholder="Vad har du på ditt gamer hjärta?"></textarea> <!-- 2012 era internet cringe; I *love* it haha -->
+      <label for="content">Inlägg</label>
+      <textarea id="content" name="content" type="" placeholder="Vad har du på ditt gamer hjärta?"></textarea> <!-- 2012 era internet cringe; I *love* it haha -->
 
       <button type="submit">Skapa diskussion</button>
    </form>
