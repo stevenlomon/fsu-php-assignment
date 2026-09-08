@@ -1,5 +1,6 @@
 <?php
   require_once __DIR__ . '/includes/helpers.php';
+  require_once __DIR__ . '/includes/db.php';
 
   $title = "The Retro Vibe";
 
@@ -7,11 +8,12 @@
   $discussionId = (int)($_GET['id'] ?? 0);
 
   if ($discussionId <= 0) {
-    header('Location: /discussions.php');
+    header('Location: /groups.php'); // Säkrare ifall denna bara leder tillbara till groups.php så det inte blir en redirect trap
     exit;
   }
 
-  $subheader = "Diskussions sida med id #" . $discussionId;
+  $discussion = get_discussion($mysqli, $discussionId);
+  $subheader = "Diskussions sida: " . $discussion['title'];
 ?>
 
 <!DOCTYPE html>

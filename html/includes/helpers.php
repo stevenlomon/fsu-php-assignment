@@ -118,3 +118,18 @@ function get_discussions_for_group(mysqli $mysqli, int $groupId): array {
     $result = $statement->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+
+function get_discussion(mysqli $mysqli, int $discussionId): ?array {
+  $statement = $mysqli->prepare("
+    SELECT title, content
+    FROM posts
+    WHERE id = ?
+    LIMIT 1
+  ");
+  $statement->bind_param("i", $discussionId);
+
+  $statement->execute();
+  $result = $statement->get_result();
+
+  return $result->fetch_assoc() ?: null; 
+}
