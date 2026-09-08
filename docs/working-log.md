@@ -477,3 +477,20 @@ Följande SQL körs och följande konstant kommer läggas till i ? helpers.php`:
 Låt oss testa 'denied' nu innan vi lägger till membership cooldown. Let's deny Bob haha  
 ![Bob är permanently denied](./screenshots/Screenshot_2026-09-07_07-57-21.png)  
 Permanently DENIED haha. Låt oss implementera 14 day cooldown! Kommer ta mycket hjälp av Gemini här.  
+
+## Sep 8
+```
+ALTER TABLE group_members 
+ADD COLUMN denied_at TIMESTAMP NULL DEFAULT NULL 
+AFTER applied_at;
+```
+Första steget är alltid att göra det möjligt i databasen.  
+Actually, jag tänker nu. Det funkar som det gör just nu. Man blir nekad and that's it. Jag implementerar detta när jag implementerat allt annat för G om jag känner för det. Moving on.  
+* Koda upp "Mina grupper"  
+* Logga in som den andra användaren och se gruppen vi nu är medlem i under "Mina grupper"  
+Då är det dessa nu. Låt oss koda upp "Mina grupper". Jag tänker en helper function get_my_groups() där kraven är, lemme think this through:
+* INNER JOIN mellan `groups` och `group_members` för att få `name` från `groups`
+* JOIN ska matcha på group_id
+* I `group_members` behöver vi att `user_id` === `$_SESSION['user_id']`  
+* `status` måste vara `approved`  
+I think that's it
