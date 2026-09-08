@@ -119,17 +119,33 @@ function get_discussions_for_group(mysqli $mysqli, int $groupId): array {
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
+// För att hämta startinlägget
 function get_discussion(mysqli $mysqli, int $discussionId): ?array {
   $statement = $mysqli->prepare("
-    SELECT title, content
-    FROM posts
-    WHERE id = ?
-    LIMIT 1
+      SELECT p.id, p.group_id, p.title, p.content, p.created_at, u.username
+      FROM posts p
+      INNER JOIN users u ON p.user_id = u.id
+      WHERE p.id = ? AND p.reply_to IS NULL
+      LIMIT 1
   ");
   $statement->bind_param("i", $discussionId);
-
   $statement->execute();
-  $result = $statement->get_result();
 
+  $result = $statement->get_result();
   return $result->fetch_assoc() ?: null; 
+}
+
+// För att hämta alla svar till startinlägget
+function get_discussion_replies(mysqli $mysqli, int $discussionId): array {
+    $stmt = $mysqli->prepare("
+        SELECT p.id, p.content, p.created_at, u.username
+        FROM posts p
+        INNER JOIN users u ON p.user_id = u.id
+        WHERE p.reply_to = ?
+        ORDER BY p.created_at ASC
+    ");
+    $stmt->bind_param("i", $discussionId);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
