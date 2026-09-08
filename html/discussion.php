@@ -15,6 +15,14 @@
   $discussion = get_discussion($mysqli, $discussionId);
   $subheader = "Diskussions sida: " . $discussion['title'];
 
+  $errorMessage = $_SESSION['error_message'] ?? null;
+  unset($_SESSION['error_message']);
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Man ska endast kunna svara på trådar i diskussionen om man är inloggad
+    require_auth();
+  }
+
   $replies = get_discussion_replies($mysqli, $discussionId);
 ?>
 
@@ -32,11 +40,16 @@
     <h2><?= e($subheader) ?></h2>
   </header>
 
-  <p>
+  <div>
     <span>(<?= e($discussion['created_at']) ?>)</span>
     <strong><?= e($discussion['username']) ?>:</strong>
     <span><?= e($discussion['content']) ?></span>
-  </p>
+
+    <form method="POST" action="/reply.php" style="display:inline;">
+      <input type="hidden" name="discussion_id" value="<?= $discussionId ?>" />
+      <button type="submit">Svara</button>
+    </form>
+  </div>
   
   <!-- Här också: alla svar visas vare sig man är inloggad eller inte -->
   <?php if (empty($replies)): ?>
@@ -48,15 +61,33 @@
     <?php endif; ?>
 
   <?php else: ?>
-    <div>
-      <?php foreach ($replies as $reply): ?>
-        <p>
-          <span>(<?= e($reply['created_at']) ?>)</span>
-          <strong><?= e($reply['username']) ?>:</strong>
-          <span><?= e($reply['content']) ?></span>
-        </p>
-      <?php endforeach; ?>
-    </div>
+    <?php foreach ($replies as $reply): ?>
+      <div>
+        <span>(<?= e($reply['created_at']) ?>)</span>
+        <strong><?= e($reply['username']) ?>:</strong>
+        <span><?= e($reply['content']) ?></span>
+
+        <form method="POST" action="/reply.php" style="display:inline;">
+          <input type="hidden" name="discussion_id" value="<?= $discussionId ?>" />
+          <button type="submit">Svara</button>
+        </form>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+
+  <?php if (is_logged_in()): ?>
+   <h3>Bidra till diskussionen!</h3>
+
+   <?php if($errorMessage): ?>
+    <p style="color: red;"><?= e($errorMessage) ?></p>
+    <?php endif; ?>
+
+   <form method="POST" action="discussion.php?id=<?= $discussionId ?>">
+      <label for="content">Inlägg</label>
+      <textarea id="content" name="content" placeholder="Vilken ny tråd vill du starta?"></textarea>
+
+      <button type="submit">Skicka</button>
+   </form>
   <?php endif; ?>
 
 </body>

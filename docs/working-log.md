@@ -540,3 +540,11 @@ DROP TABLE IF EXISTS topics;
 ```
 ![Tre databas ändringar i en lyckad query](./screenshots/Screenshot_2026-09-08_10-58-08.png)  
 Beautiful  
+
+![Bob's första inlägg](./screenshots/Screenshot_2026-09-08_12-15-41.png)  
+Alright, vi kan se skapade inlägg. Nu ska vi kunna svara på dem också. Tänker två sätt:  
+* Allmän tanke i diskussion (skapa en ny tråd i diskussionen) -> form i slutet av sidan  
+* Svara på en tråd som redan finns i diskussionen -> Knapp (hidden form) brediv ett inlägg  
+
+![All diskussions UI på plats](./screenshots/Screenshot_2026-09-08_12-23-25.png)  
+Alright, all diskussions UI är på plats. Imorn implementerar vi funktionaliteten och knyter ihop säcken.  
