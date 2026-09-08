@@ -63,6 +63,14 @@
     <h2><?= e($subheader) ?></h2>
   </header>
 
+  <!-- Detta visas både för gäster och inloggade -->
+  <h3>Medlemmar</h3>
+    <section>
+      <!-- foreach över gruppmedlemmar; skapa en helper function get_group_members()? To be implemented -->
+    </section>
+  
+  <a href="/discussions.php?groupId=<?=$groupId?>">Se alla diskussioner</a>
+
   <?php if (!is_logged_in()): ?>
 
     <p><a href="/login.php">Logga in</a> eller <a href="/register.php">skapa ett konto</a> för att ansöka om medlemskap.</p>
@@ -94,11 +102,6 @@
       Du är medlem (Roll: <?= e($membership['role']) ?>)
     </p>
 
-    <h3>Medlemmar</h3>
-    <section>
-      <!-- foreach över gruppmedlemmar; skapa en helper function get_group_members()? To be implemented -->
-    </section>
-
     <?php if($membership['role'] === 'admin'): ?>
       <h3>Ansökningar (<?= count($pendingApplications) ?>)</h3>
 
@@ -125,8 +128,6 @@
             <?php endforeach; ?>
           </ul>
     <?php endif; ?>
-
-    <a href="/discussions.php?groupId=<?=$groupId?>">Se alla diskussioner</a>
     
     <?php endif; ?>
   <?php endif; ?>

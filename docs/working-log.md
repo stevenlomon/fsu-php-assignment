@@ -508,3 +508,35 @@ Jag kommer strukturera upp det här väldigt lik grupper:
 * Alla diskussioner är klickbara med `<a href="/discussion.php?id=<?= (int)$discussion['id'] ?>">Ta del av diskussion</a>`
 * På `discussion.php` visar vi replies. Här kommer jag nog behöva bolla lite med AI igen.
 Mycket copy paste, let's do it.  
+
+Jag tänker två helper functions:  
+* `get_discussions_for_group()` hämtar alla rader i `posts` där `reply_to` är null; dvs det är starten på en diskussion
+* `get_replies_to_discussion()` hämtar alla rader i `posts` där `reply_to` inte är null och...
+Här tänker jag oxå.. är `topic_id` verkligen nödvändigt? Det är inte som att `topics` kommer vara en traditionell lookup table som "ersätter en enum"; `topic` kommer kunna vara vilken string som helst. Så jag, vi skulle kunna matcha på `topic_id` men då funkar `id` i `posts` lika bra? Ska bolla lite här med Gemini.  
+
+> **The Flat Threading Model**
+> Instead of allowing replies-to-replies (which creates deeply nested comment trees that require complex recursive SQL), treat every reply as pointing directly to the **root post ID**:
+> - **Discussion Starter (Root):** `reply_to IS NULL`. Must have both a `title` and `content`.
+> - **Reply (Comment):** `reply_to = root_post_id`. Only needs `content` (`title` is `NULL`).
+> With this convention, fetching an entire discussion and its responses takes two elementary queries.  
+
+Yea, det här låter mega bra.  
+Allt bygger på denna SQL query:  
+```
+-- 1. Släpp först den gamla relationen till topics
+ALTER TABLE posts DROP FOREIGN KEY posts_ibfk_2;
+
+-- 2. Uppdatera tabellstrukturen
+ALTER TABLE posts
+  DROP COLUMN topic_id,
+  ADD COLUMN group_id INT(11) NOT NULL AFTER user_id,
+  ADD COLUMN title VARCHAR(255) NULL AFTER group_id,
+  CHANGE COLUMN `text` `content` TEXT NOT NULL,
+  ADD CONSTRAINT fk_posts_group FOREIGN KEY (group_id) REFERENCES `groups`(id) ON DELETE CASCADE,
+  ADD CONSTRAINT fk_posts_reply FOREIGN KEY (reply_to) REFERENCES posts(id) ON DELETE CASCADE;
+
+-- 3. Ta bort den överflödiga topics-tabellen
+DROP TABLE IF EXISTS topics;
+```
+![Tre databas ändringar i en lyckad query](./screenshots/Screenshot_2026-09-08_10-58-08.png)  
+Beautiful  

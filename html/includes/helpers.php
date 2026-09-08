@@ -96,3 +96,25 @@ function get_user_groups(mysqli $mysqli, int $userId): array {
     $result = $statement->get_result();
     return $result->fetch_all(MYSQLI_ASSOC); // Samma resonemang som get_pending_group_applications()
 }
+
+function get_discussions_for_group(mysqli $mysqli, int $groupId): array {
+    $statement = $mysqli->prepare("
+        SELECT 
+            p.id, 
+            p.title, 
+            p.created_at, 
+            u.username,
+            COUNT(replies.id) AS reply_count
+        FROM posts p
+        INNER JOIN users u ON p.user_id = u.id
+        LEFT JOIN posts replies ON replies.reply_to = p.id
+        WHERE p.group_id = ? AND p.reply_to IS NULL
+        GROUP BY p.id
+        ORDER BY p.created_at DESC
+    ");
+    $statement->bind_param("i", $groupId);
+    $statement->execute();
+
+    $result = $statement->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
