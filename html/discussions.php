@@ -14,6 +14,11 @@
   }
 
   $group = get_group($mysqli, $groupId);
+  if (!$group) {
+      header('Location: /groups.php');
+      exit;
+  }
+
   $subheader = "Alla diskussioner i gruppen " . $group['name'];
 
   $discussions = get_discussions_for_group($mysqli, $groupId);
@@ -113,7 +118,7 @@
       <input id="title" name="title" type="text" required>
       
       <label for="content">Inlägg</label>
-      <textarea id="content" name="content" type="" placeholder="Vad har du på ditt gamer hjärta?"></textarea> <!-- 2012 era internet cringe; I *love* it haha -->
+      <textarea id="content" name="content" placeholder="Vad har du på ditt gamer hjärta?"></textarea> <!-- 2012 era internet cringe; I *love* it haha -->
 
       <button type="submit">Skapa diskussion</button>
    </form>

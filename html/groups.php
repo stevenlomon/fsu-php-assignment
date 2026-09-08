@@ -114,7 +114,7 @@
       <input id="name" name="name" type="text" required>
       
       <label for="description">Beskrivning</label>
-      <textarea id="description" name="description" type="" placeholder="Vad vill du ska diskuteras i denna grupp?"></textarea>
+      <textarea id="description" name="description" placeholder="Vad vill du ska diskuteras i denna grupp?"></textarea>
 
       <button type="submit">Skapa grupp</button>
    </form>
