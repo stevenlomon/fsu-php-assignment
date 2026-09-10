@@ -37,6 +37,8 @@
   // Nu med $group kan vi istället för $groupId använda..
   $subheader = "Samlingssida för " . $group['name']; // String concatenation med `.`!
 
+  $members = get_group_members($mysqli, $groupId);
+
   $membership = null;
   if (is_logged_in()) {
       $membership = get_group_membership($mysqli, $groupId, (int)$_SESSION['user_id']);
@@ -66,7 +68,21 @@
   <!-- Detta visas både för gäster och inloggade -->
   <h3>Medlemmar</h3>
     <section>
-      <!-- foreach över gruppmedlemmar; skapa en helper function get_group_members()? To be implemented -->
+      <?php if (empty($members)): ?>
+        <p>Inga godkända medlemmar i gruppen än.</p>
+      <?php else: ?>
+        <ul>
+          <?php foreach ($members as $member): ?>
+            <li>
+              <strong><?= e($member['username']) ?></strong>
+              <span>— Roll: <?= e($member['role']) ?></span>
+              <?php if (!empty($member['joined_at'])): ?>
+                <small>(Gick med: <?= e(date('Y-m-d', strtotime($member['joined_at']))) ?>)</small>
+              <?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
     </section>
   
   <a href="/discussions.php?groupId=<?=$groupId?>">Se alla diskussioner</a>

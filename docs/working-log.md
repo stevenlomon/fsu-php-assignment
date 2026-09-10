@@ -604,4 +604,6 @@ Vi kör på det här.
 ![We have a discussion going](./screenshots/Screenshot_2026-09-10_09-36-56.png)  
 That's it. That's it. Det är projektet!
 
-Nästa commit blir att be Claude Code skriva CSS för att göra det *lite* presentable iaf haha!
+Nästa commit blir att be Claude Code skriva CSS för att göra det *lite* presentable iaf haha!  
+
+Det finns en "<!-- foreach över gruppmedlemmar; skapa en helper function get_group_members()? To be implemented -->" först haha  

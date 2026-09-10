@@ -60,6 +60,25 @@ function get_group(mysqli $mysqli, int $groupId): ?array {
   return $result->fetch_assoc() ?: null; 
 }
 
+// Vår ORDER BY här ser till att grupp admin kommer först, sen sorterar vi på när man gick med i gruppen
+function get_group_members(mysqli $mysqli, int $groupId): array {
+    $stmt = $mysqli->prepare("
+        SELECT 
+            u.id AS user_id, 
+            u.username, 
+            gm.role, 
+            gm.joined_at
+        FROM group_members gm
+        INNER JOIN users u ON gm.user_id = u.id
+        WHERE gm.group_id = ? AND gm.status = 'approved'
+        ORDER BY (gm.role = 'admin') DESC, gm.joined_at ASC
+    ");
+    $stmt->bind_param("i", $groupId);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
 function get_pending_group_applications(mysqli $mysqli, int $groupId): ?array {
   $statement = $mysqli->prepare("
     SELECT gm.id AS application_id, gm.user_id, gm.applied_at, u.username
