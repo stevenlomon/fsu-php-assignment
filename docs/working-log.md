@@ -553,3 +553,50 @@ Alright, all diskussions UI är på plats. Imorn implementerar vi funktionalitet
 ![Frontend password validation](./screenshots/Screenshot_2026-09-10_08-48-12.png)  
 Det är så resultatet från `setCustomValidity` ser ut! Det har man sett tidigare minsann!  
 Alright, inga mer 'TODO' i kodbasen och all data validering kring registrering är klar. Nu tacklar vi våra två sista server actions.  
+Låt oss börja med att svara i och med att den kommer vara mest komplicerad. Låt mig tänka lite själv innan jag ger det till AI för att bolla.  
+```
+<form method="POST" action="/reply.php" style="display:inline;">
+  <input type="hidden" name="discussion_id" value="<?= $discussionId ?>" />
+  <button type="submit">Svara</button>
+</form>
+```
+Det här är vår hidden form. Vi kommer skriva i reply.php. Från vår form får vi discussionId. Tabellerna som ett svar berör.. är det endast posts? Låt mig kolla.  
+Jag vill säga.. jag kanske tänker fel här. Men databas mässigt, ja? Men när vi renderar det behöver vi göra INNER JOIN med `users` för att skriva ut användarnamn? Men för att lagra datan kring responsen behöver vi endast lagra en rad i `posts` med `NULL`som `title` och korrekt `reply_to`? 
+```
+id
+user_id
+group_id
+title
+reply_to
+content
+created_at
+last_updated_at
+
+1
+4
+8
+Gamecube's spel bibliotek
+NULL
+Gamecube har så många bra spel!! Vilken är er favo...
+2026-09-08 09:51:32
+2026-09-08 09:51:32
+```
+Och även korrekt `user_id` och `group_id` såklart.  
+*Nu* kan vi ge det till Gemini.  
+
+Alright. Vi ska simplifiera. 
+"""
+Alright, vi kan se skapade inlägg. Nu ska vi kunna svara på dem också. Tänker två sätt:  
+* Allmän tanke i diskussion (skapa en ny tråd i diskussionen) -> form i slutet av sidan  
+* Svara på en tråd som redan finns i diskussionen -> Knapp (hidden form) brediv ett inlägg  
+"""
+Att implementera *båda* sätt kommer bli otrolig huvudverk. Och jag vill påstå att för att få G behöver vi endast den första. "general reply rather than targeted reply" som jag skrev till Gemini. Då kommer vi ha med detta att göra:
+
+> **The Flat Thread Architecture (Classic Forum Style)**
+> 
+> With the flat model, every response simply points to the topic's root ID:
+> - **Top of page:** The root post that started the discussion (`id = 1`, `reply_to IS NULL`).
+> - **Middle of page:** All chronological responses in order (`reply_to = 1`).
+> - **Bottom of page:** A single form with a `<textarea>` where any approved member can post a response to the topic.  
+
+Vi kör på det här. 

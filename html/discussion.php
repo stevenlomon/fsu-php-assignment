@@ -44,11 +44,6 @@
     <span>(<?= e($discussion['created_at']) ?>)</span>
     <strong><?= e($discussion['username']) ?>:</strong>
     <span><?= e($discussion['content']) ?></span>
-
-    <form method="POST" action="/reply.php" style="display:inline;">
-      <input type="hidden" name="discussion_id" value="<?= $discussionId ?>" />
-      <button type="submit">Svara</button>
-    </form>
   </div>
   
   <!-- Här också: alla svar visas vare sig man är inloggad eller inte -->
@@ -83,11 +78,17 @@
     <?php endif; ?>
 
    <form method="POST" action="discussion.php?id=<?= $discussionId ?>">
-      <label for="content">Inlägg</label>
-      <textarea id="content" name="content" placeholder="Vilken ny tråd vill du starta?"></textarea>
-
-      <button type="submit">Skicka</button>
-   </form>
+    <div>
+      <textarea 
+        name="content" 
+        rows="4" 
+        cols="50" 
+        placeholder="Vad vill du svara?" 
+        required
+      ></textarea>
+    </div>
+    <button type="submit">Skicka svar</button>
+  </form>
   <?php endif; ?>
 
 </body>
