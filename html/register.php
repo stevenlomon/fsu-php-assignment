@@ -9,9 +9,35 @@
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
+    $password = $_POST['password'] ?? ''; // Vi använder INTE trim för lösenord! Whitespace kan vara avsiktligt
 
-    // TODO: Backend validering av user input data
+    // Data validering:
+    // * username måste vara minst 3 karaktärer långt
+    // * firstName måste vara minst 2 karaktärer långt
+    // * lastName.. måste också vara minst 2 karaktärer långt?
+    // * email har en egen validator i php om jag förstår rätt?
+    // * Och med det borde password också ha en? 
+
+    // passwords har inte en equivalent till `filter_var($email, FILTER_VALIDATE_EMAIL)`
+    // Jag väljer då endast att lösenord ska vara minst 8 karaktärer långt
+    // mb_strlen() ser till att vi faktiskt räknar karaktärer och inte bytes!
+    if (mb_strlen($username) < 3) {
+        $_SESSION['error_message'] = "Användarnamnet måste vara minst 3 tecken långt.";
+    } elseif (mb_strlen($firstName) < 2) {
+        $_SESSION['error_message'] = "Förnamnet måste vara minst 2 tecken långt.";
+    } elseif (mb_strlen($lastName) < 2) {
+        $_SESSION['error_message'] = "Efternamnet måste vara minst 2 tecken långt.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error_message'] = "Ange en giltig e-postadress.";
+    } elseif (strlen($password) < 8) {
+        $_SESSION['error_message'] = "Lösenordet måste vara minst 8 tecken långt.";
+    }
+
+    // Om något fel uppstod: studsa tillbaka
+    if (isset($_SESSION['error_message'])) {
+        header('Location: /register.php');
+        exit;
+    }
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Default sätt att hasha lösenord i php tydligen!
 
