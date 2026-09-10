@@ -599,4 +599,9 @@ Att implementera *båda* sätt kommer bli otrolig huvudverk. Och jag vill påst�
 > - **Middle of page:** All chronological responses in order (`reply_to = 1`).
 > - **Bottom of page:** A single form with a `<textarea>` where any approved member can post a response to the topic.  
 
-Vi kör på det här. 
+Vi kör på det här.  
+
+![We have a discussion going](./screenshots/Screenshot_2026-09-10_09-36-56.png)  
+That's it. That's it. Det är projektet!
+
+Nästa commit blir att be Claude Code skriva CSS för att göra det *lite* presentable iaf haha!

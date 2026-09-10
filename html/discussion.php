@@ -21,6 +21,37 @@
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Man ska endast kunna svara på trådar i diskussionen om man är inloggad
     require_auth();
+
+    $userId = (int)$_SESSION['user_id'];
+    $content = trim($_POST['content'] ?? '');
+
+    // Är användaren godkänd medlem i gruppens diskussion?
+    $membership = get_group_membership($mysqli, (int)$discussion['group_id'], $userId);
+    if (!$membership || $membership['status'] !== 'approved') {
+        header("Location: /group.php?id=" . (int)$discussion['group_id']);
+        exit;
+    }
+
+    if (mb_strlen($content) < 2) {
+        $_SESSION['error_message'] = "Svaret måste innehålla minst 2 tecken.";
+        header("Location: /discussion.php?id={$discussionId}");
+        exit;
+    }
+
+    // Spara svaret i databasen med reply_to satt till trådens ID
+    $statement = $mysqli->prepare("
+        INSERT INTO posts (user_id, group_id, title, reply_to, content)
+        VALUES (?, ?, NULL, ?, ?)
+    ");
+    $statement->bind_param("iiis", $userId, $discussion['group_id'], $discussionId, $content);
+
+    if (!$statement->execute()) {
+        die("Kunde inte spara svar: " . e($statement->error));
+    }
+
+    // Ladda om sidan via GET (Post/Redirect/Get) så svaret visas direkt i listan!
+    header("Location: /discussion.php?id={$discussionId}");
+    exit;
   }
 
   $replies = get_discussion_replies($mysqli, $discussionId);
@@ -61,11 +92,6 @@
         <span>(<?= e($reply['created_at']) ?>)</span>
         <strong><?= e($reply['username']) ?>:</strong>
         <span><?= e($reply['content']) ?></span>
-
-        <form method="POST" action="/reply.php" style="display:inline;">
-          <input type="hidden" name="discussion_id" value="<?= $discussionId ?>" />
-          <button type="submit">Svara</button>
-        </form>
       </div>
     <?php endforeach; ?>
   <?php endif; ?>
