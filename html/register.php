@@ -10,6 +10,7 @@
     $lastName = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? ''; // Vi använder INTE trim för lösenord! Whitespace kan vara avsiktligt
+    $passwordRepeat = $_POST['password_repeat'] ?? '';
 
     // Data validering:
     // * username måste vara minst 3 karaktärer långt
@@ -31,6 +32,8 @@
         $_SESSION['error_message'] = "Ange en giltig e-postadress.";
     } elseif (strlen($password) < 8) {
         $_SESSION['error_message'] = "Lösenordet måste vara minst 8 tecken långt.";
+    } elseif ($password !== $passwordRepeat) {
+        $_SESSION['error_message'] = "Lösenorden matchade inte varandra.";
     }
 
     // Om något fel uppstod: studsa tillbaka
@@ -93,9 +96,28 @@
     <label for="password">Lösenord</label>
     <input id="password" name="password" type="password" required />
 
-    <!-- TODO: Frontend error validering ifall dessa två inte matchar -->
     <label for="password-repeat">Upprepa Lösenord</label>
     <input id="password-repeat" name="password_repeat" type="password" required />
+
+    <!-- För att se till att båda lösenord matchar "frontend mässigt" kan vi tydligen använda 
+     `setCustomValidity` från Browsern's native Constraint Validation API! -->
+     <!-- Det här lär bli den enda JavaScript vi använder! -->
+     <script>
+      const password = document.getElementById('password');
+      const passwordRepeat = document.getElementById('password-repeat');
+
+      function checkPasswordMatch() {
+        if (passwordRepeat.value !== '' && password.value !== passwordRepeat.value) {
+          passwordRepeat.setCustomValidity('Lösenorden matchar inte');
+        } else {
+          // Empty string resets the validity state to valid
+          passwordRepeat.setCustomValidity('');
+        }
+      }
+
+      password.addEventListener('input', checkPasswordMatch);
+      passwordRepeat.addEventListener('input', checkPasswordMatch);
+    </script>
 
     <button type="submit">Skapa konto</button>
   </form>

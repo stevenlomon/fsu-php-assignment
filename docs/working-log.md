@@ -548,3 +548,8 @@ Alright, vi kan se skapade inlägg. Nu ska vi kunna svara på dem också. Tänke
 
 ![All diskussions UI på plats](./screenshots/Screenshot_2026-09-08_12-23-25.png)  
 Alright, all diskussions UI är på plats. Imorn implementerar vi funktionaliteten och knyter ihop säcken.  
+
+## Sep 10
+![Frontend password validation](./screenshots/Screenshot_2026-09-10_08-48-12.png)  
+Det är så resultatet från `setCustomValidity` ser ut! Det har man sett tidigare minsann!  
+Alright, inga mer 'TODO' i kodbasen och all data validering kring registrering är klar. Nu tacklar vi våra två sista server actions.  
